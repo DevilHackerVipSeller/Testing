@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>𝐓𝐇𝐄 𝐃𝐄𝐕𝐈𝐋 𝐁𝐎𝐒𝐒 𝐏𝐑𝐄𝐃𝐈𝐂𝐓𝐎𝐑</title>
+  <title>𝐃𝐄𝐕𝐈𝐋 𝐇𝐀𝐂𝐊𝐄𝐑 𝐅𝐀𝐌𝐈𝐋𝐘</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -166,9 +166,9 @@
 <body class="min-h-screen p-4">
   <div class="container space-y-6">
     <div class="wrapper">
-      <svg role="img" viewBox="0 0 10 25" preserveAspectRatio="xMidYMid meet">
+      <svg role="img" viewBox="0 0 10 20" preserveAspectRatio="xMidYMid meet">
         <text x="50%" y="50%" dy=".1em" text-anchor="middle" font-size="80">
-          𝐓𝐇𝐄 𝐃𝐄𝐕𝐈𝐋 𝐁𝐎𝐒𝐒 𝐏𝐑𝐄𝐃𝐈𝐂𝐓𝐎𝐑
+          𝐃𝐄𝐕𝐈𝐋 𝐇𝐀𝐂𝐊𝐄𝐑 𝐅𝐀𝐌𝐈𝐋𝐘
         </text>
       </svg>
     </div>
@@ -221,7 +221,6 @@
   <div id="toastContainer" class="toast"></div>
 
   <script>
-   
   // Configuration Constants
 const API_URL = "https://api.fantasygamesapi.com/api/webapi/GetNoaverageEmerdList";
 const API_RETRY_INTERVAL = 5000;
@@ -243,12 +242,13 @@ const DOM = {
   totalLosses: document.getElementById("totalLosses"),
   overallConfidenceDisplay: document.getElementById("overallConfidenceDisplay"),
   serverStatus: document.getElementById("serverStatus"),
-  historyContainer: document.getElementById("historyContainer")
+  historyContainer: document.getElementById("historyContainer"),
+  resetButton: document.getElementById("resetButton") // Added reset button
 };
 
 // Validate DOM elements
 Object.values(DOM).forEach((el, index) => {
-  if (!el) console.error(`DOM element at index ${index} is null. Check HTML IDs.`);
+  if (!el && index !== 8) console.error(`DOM element at index ${index} is null. Check HTML IDs.`);
 });
 
 // State
@@ -300,20 +300,19 @@ const getBetLevel = (confidence) => {
 // Enhanced Prediction Logic
 const spyPredict = (history) => {
   console.log("spyPredict called with history:", history);
-  if (history.length < 3) {
-    const prediction = Math.random() < 0.5 ? "SMALL" : "BIG";
+  if (history.length < 5) {
+    const prediction = Math.random() < 0.5 ? "BIG" : "SMALL";
     return { prediction, confidence: 50, betLevel: "1x", decisionFactor: "Random (insufficient data)" };
   }
 
-  // Filter valid results to prevent NaN or invalid data (Fix for Error 2)
+  // Filter valid results
   const recentResults = history
     .filter(h => h.result !== "-" && !isNaN(Number(h.result)) && Number(h.result) >= 0 && Number(h.result) <= 9)
-    .slice(0, 10)
+    .slice(0, 15)
     .map(h => Number(h.result))
     .reverse();
 
-  // Fallback if no valid results
-  if (recentResults.length === 0) {
+  if (recentResults.length < 3) {
     const prediction = Math.random() < 0.5 ? "SMALL" : "BIG";
     return { prediction, confidence: 50, betLevel: "1x", decisionFactor: "Random (no valid historical data)" };
   }
@@ -322,6 +321,12 @@ const spyPredict = (history) => {
   const bigCount = recentResults.filter(num => num >= 5).length;
   const totalCount = recentResults.length || 1;
   const probBig = bigCount / totalCount;
+
+  // Weighted moving average
+  const weights = [0.4, 0.3, 0.2, 0.1];
+  const recent4 = recentResults.slice(0, 4);
+  const weightedBig = recent4.reduce((sum, num, i) => sum + (num >= 5 ? weights[i] : 0), 0);
+  const weightedTrend = weightedBig / weights.reduce((a, b) => a + b, 0);
 
   // Analyze streaks
   let streakType = null;
@@ -347,31 +352,48 @@ const spyPredict = (history) => {
   }
   const alternationRatio = alternationCount / (recentResults.length - 2) || 0;
 
+  // Pattern analysis: BIG/SMALL transitions
+  let transitionCount = 0;
+  for (let i = 1; i < recentResults.length; i++) {
+    const currentType = recentResults[i] >= 5 ? "BIG" : "SMALL";
+    const prevType = recentResults[i - 1] >= 5 ? "BIG" : "SMALL";
+    if (currentType !== prevType) transitionCount++;
+  }
+  const transitionRatio = transitionCount / (recentResults.length - 1) || 0;
+
   // Decision logic
   let prediction;
   let confidence;
   let decisionFactor = [];
 
-  if (streakLength >= 3) {
+  if (streakLength >= 4) {
     prediction = streakType === "BIG" ? "SMALL" : "BIG";
-    confidence = Math.min(85, 65-streakLength * 5);
+    confidence = Math.min(90, 70 - streakLength * 4);
     decisionFactor.push(`Long streak of ${streakType} (${streakLength} times)`);
-  } else if (alternationRatio > 0.5) {
+  } else if (alternationRatio > 0.6) {
     const lastType = recentResults[0] >= 5 ? "BIG" : "SMALL";
     prediction = lastType === "BIG" ? "SMALL" : "BIG";
-    confidence = Math.min(90, 70 + alternationRatio * 20);
+    confidence = Math.min(92, 75 + alternationRatio * 20);
     decisionFactor.push(`High alternation ratio: ${alternationRatio.toFixed(2)}`);
+  } else if (transitionRatio > 0.5 && weightedTrend < 0.4) {
+    prediction = "BIG";
+    confidence = Math.min(88, 65 + transitionRatio * 20);
+    decisionFactor.push(`High transition ratio: ${transitionRatio.toFixed(2)}, weighted trend: ${weightedTrend.toFixed(2)}`);
+  } else if (transitionRatio > 0.5 && weightedTrend > 0.6) {
+    prediction = "SMALL";
+    confidence = Math.min(88, 65 + transitionRatio * 20);
+    decisionFactor.push(`High transition ratio: ${transitionRatio.toFixed(2)}, weighted trend: ${weightedTrend.toFixed(2)}`);
   } else {
     prediction = probBig < 0.5 ? "BIG" : "SMALL";
-    confidence = Math.round(60 + Math.abs(probBig - 0.5) * 80);
+    confidence = Math.round(60 + Math.abs(probBig - 0.5) * 100);
     decisionFactor.push(`Recent BIG ratio: ${probBig.toFixed(2)}`);
   }
 
   // Adjust confidence based on historical win rate
-  if (history.length >= 10) {
-    const recentPredictions = history.slice(0, 10).filter(h => h.resultStatus === "WIN");
-    const winRate = recentPredictions.length / 10;
-    confidence = Math.min(95, confidence + winRate * 10);
+  if (history.length >= 15) {
+    const recentPredictions = history.slice(0, 15).filter(h => h.resultStatus === "WIN");
+    const winRate = recentPredictions.length / 15;
+    confidence = Math.min(95, confidence + winRate * 15);
     decisionFactor.push(`Recent win rate: ${winRate.toFixed(2)}`);
   }
 
@@ -429,9 +451,8 @@ const fetchGameResult = async (retryCount = 0) => {
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     const data = await response.json();
     console.log("Raw API response:", data);
-    // Validate number field (Fix for Error 1)
-    if (!data?.data?.list?.[0]?.issueNumber || !data.data.list[0].number || isNaN(Number(data.data.list[0].number)) || Number(data.data.list[0].number) < 0 || Number(data.data.list[0].number) > 9) {
-      throw new Error("Invalid API response: missing or invalid issueNumber/number");
+    if (!data?.data?.list?.length || !data.data.list[0].issueNumber || !data.data.list[0].number || isNaN(Number(data.data.list[0].number)) || Number(data.data.list[0].number) < 0 || Number(data.data.list[0].number) > 9) {
+      throw new Error("Invalid API response: empty list or missing/invalid issueNumber/number");
     }
     DOM.serverStatus.innerText = "Connected";
     showToast("Fetched game data.", "success");
@@ -469,6 +490,7 @@ const updatePrediction = async () => {
   if (!result) {
     console.warn("No result fetched, updating UI with existing data");
     showToast("No new data available.", "warning");
+    DOM.currentPredictionDisplay.innerText = lastPrediction ? `${lastPrediction} (1x)` : "Waiting for data...";
     updateHistory();
     updateStats();
     return;
@@ -476,59 +498,72 @@ const updatePrediction = async () => {
 
   console.log("Fetched result:", result);
 
-  if (lastFetchedPeriod !== result.issueNumber || lastPeriodUpdate !== currentMinute) {
-    console.log("Processing result for period:", result.issueNumber);
-    // Update previous period if pending
-    if (historyData.length > 0 && historyData[0].resultStatus === "Pending") {
-      const actualNumber = Number(result.number);
-      if (isNaN(actualNumber)) {
-        console.error("Invalid result number:", result.number);
-        showToast("Error: Invalid API result number.", "error");
-        updateHistory();
-        updateStats();
-        return;
-      }
-      const status = updateLastStatus(actualNumber);
-      const resultType = actualNumber >= 5 ? "BIG" : "SMALL";
-      historyData[0].result = actualNumber.toString();
-      historyData[0].resultStatus = status;
-      historyData[0].calculation = `${actualNumber} (${resultType})`;
-      showToast(`Result: ${status} (${resultType})`, status === "WIN" ? "success" : "error");
-      saveHistory();
+  // Calculate next period
+  const nextPeriodFull = (BigInt(result.issueNumber) + 1n).toString();
+  const nextPeriod = nextPeriodFull.slice(-3);
+
+  // Prevent duplicate periods
+  if (lastFetchedPeriod === result.issueNumber && lastPeriodUpdate === currentMinute) {
+    console.log("Duplicate period detected, skipping update");
+    DOM.currentPredictionDisplay.innerText = lastPrediction ? `${lastPrediction} (1x)` : "Waiting for data...";
+    updateHistory();
+    updateStats();
+    return;
+  }
+
+  // Cross-check period to ensure no duplicates
+  if (historyData.some(item => item.period === nextPeriod)) {
+    console.log("Next period already in history, refreshing UI");
+    DOM.currentPredictionDisplay.innerText = lastPrediction ? `${lastPrediction} (1x)` : "Waiting for data...";
+    updateHistory();
+    updateStats();
+    return;
+  }
+
+  // Update previous period if pending
+  if (historyData.length > 0 && historyData[0].resultStatus === "Pending") {
+    const actualNumber = Number(result.number);
+    if (isNaN(actualNumber)) {
+      console.error("Invalid result number:", result.number);
+      showToast("Error: Invalid API result number.", "error");
       updateHistory();
       updateStats();
+      return;
     }
-
-    // Generate new prediction
-    const aiDecision = spyPredict(historyData);
-    lastPrediction = aiDecision.prediction;
-    const nextPeriodFull = (BigInt(result.issueNumber) + 1n).toString();
-    const nextPeriod = nextPeriodFull.slice(-3);
-
-    DOM.currentPeriodDisplay.innerText = nextPeriodFull;
-    DOM.currentPredictionDisplay.innerText = `${aiDecision.prediction} (${aiDecision.betLevel})`;
-    DOM.confidenceDisplay.innerText = `${aiDecision.confidence}%`;
-    DOM.overallConfidenceDisplay.innerText = `${aiDecision.confidence}%`;
-
-    historyData.unshift({
-      period: nextPeriod,
-      prediction: aiDecision.prediction,
-      betLevel: aiDecision.betLevel,
-      result: "-",
-      resultStatus: "Pending",
-      calculation: "-",
-      decisionFactor: aiDecision.decisionFactor
-    });
+    const status = updateLastStatus(actualNumber);
+    const resultType = actualNumber >= 5 ? "BIG" : "SMALL";
+    historyData[0].result = actualNumber.toString();
+    historyData[0].resultStatus = status;
+    historyData[0].calculation = `${actualNumber} (${resultType})`;
+    showToast(`Result: ${status} (${resultType})`, status === "WIN" ? "success" : "error");
     saveHistory();
     updateHistory();
     updateStats();
-    lastFetchedPeriod = result.issueNumber;
-    lastPeriodUpdate = currentMinute;
-  } else {
-    console.log("No period change, refreshing UI");
-    updateHistory();
-    updateStats();
   }
+
+  // Generate new prediction
+  const aiDecision = spyPredict(historyData);
+  lastPrediction = aiDecision.prediction;
+
+  DOM.currentPeriodDisplay.innerText = nextPeriodFull;
+  DOM.currentPredictionDisplay.innerText = `${aiDecision.prediction} (${aiDecision.betLevel})`;
+  DOM.confidenceDisplay.innerText = `${aiDecision.confidence}%`;
+  DOM.overallConfidenceDisplay.innerText = `${aiDecision.confidence}%`;
+
+  historyData.unshift({
+    period: nextPeriod,
+    prediction: aiDecision.prediction,
+    betLevel: aiDecision.betLevel,
+    result: "-",
+    resultStatus: "Pending",
+    calculation: "-",
+    decisionFactor: aiDecision.decisionFactor
+  });
+  saveHistory();
+  updateHistory();
+  updateStats();
+  lastFetchedPeriod = result.issueNumber;
+  lastPeriodUpdate = currentMinute;
 };
 
 const updateTimer = () => {
@@ -543,45 +578,44 @@ const updateStats = () => {
 };
 
 const updateHistory = () => {
+  console.log("Updating history with data:", JSON.stringify(historyData, null, 2));
   if (!DOM.historyContainer) {
     console.error("History container not found");
     showToast("Error: History container not found.", "error");
     return;
   }
-  console.log("Updating history with data:", historyData);
   if (historyData.length === 0) {
-    DOM.historyContainer.innerHTML = '<div class="no-results">No results available yet.</div>';
+    console.warn("No history data available");
+    DOM.historyContainer.innerHTML = '<div class="no-results">No results available yet. Waiting for API data...</div>';
     return;
   }
   try {
     DOM.historyContainer.innerHTML = historyData.map((item, index) => {
       let borderColor = item.resultStatus === "WIN" ? "border-l-4 border-green-400" :
-                       item.resultStatus === "LOSS" ? "border-l-4 border-red-400" :
-                       "border-l-4 border-yellow-400";
+                      item.resultStatus === "LOSS" ? "border-l-4 border-red-400" :
+                      "border-l-4 border-yellow-400";
       let iconClass = item.resultStatus === "WIN" ? "fa-check-circle win-animation text-green-400" :
                      item.resultStatus === "LOSS" ? "fa-xmark-circle loss-animation text-red-400" :
                      "fa-spinner spinner text-yellow-400";
-      return `
-        <div class="history-item ripple grid grid-cols-3 gap-2 p-3 ${borderColor}" role="listitem">
-          <div class="col-span-2 space-y-1">
-            <div class="text-cyan-200 text-sm"><i class="fa fa-calendar mr-1 text-magenta-400"></i><strong>Period: ${item.period}</strong></div>
-            <div class="text-cyan-200 text-sm"><i class="fa fa-chart-bar mr-1 text-magenta-400"></i>Predict: ${item.prediction} (${item.betLevel})</div>
-            <div class="text-cyan-200 text-sm"><i class="fa fa-calculator mr-1 text-magenta-400"></i>Result: ${item.calculation}</div>
-            <div class="text-cyan-200 text-sm"><i class="fa fa-trophy mr-1 text-magenta-400"></i>Status: ${item.resultStatus}</div>
-          </div>
-          <div class="flex items-center justify-end">
-            <i class="fa-solid ${iconClass} text-lg"></i>
-            <button onclick="deleteHistoryItem(${index})" class="ml-2 text-red-600 hover:text-red-800" title="Delete">
-              <i class="fa-solid fa-trash"></i>
-            </button>
-          </div>
-        </div>
-      `;
+      return `<div class="history-item ripple grid grid-cols-3 gap-2 p-3 ${borderColor}" role="listitem">
+                <div class="col-span-2 space-y-1">
+                  <div class="text-cyan-200 text-sm"><i class="fa fa-calendar mr-1 text-magenta-400"></i><strong>Period: ${item.period}</strong></div>
+                  <div class="text-cyan-200 text-sm"><i class="fa fa-money-bill mr-1 text-magenta-400"></i>Predict: ${item.prediction} (${item.betLevel})</div>
+                  <div class="text-cyan-200 text-sm"><i class="fa fa-chart-bar mr-1 text-magenta-400"></i>Result: ${item.calculation}</div>
+                  <div class="text-cyan-200 text-sm"><i class="fa fa-trophy mr-1 text-magenta-400"></i>Status: ${item.resultStatus}</div>
+                </div>
+                <div class="flex items-center justify-end">
+                  <i class="fa-solid ${iconClass} text-lg"></i>
+                  <button onclick="deleteHistoryItem(${index})" class="ml-2 text-red-600 hover:text-red-800" title="Delete">
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                </div>
+              </div>`;
     }).join('');
   } catch (e) {
     console.error("Error updating history:", e);
     showToast("Error updating history display.", "error");
-    DOM.historyContainer.innerHTML = '<div class="no-results">Error displaying history.</div>';
+    DOM.historyContainer.innerHTML = '<div class="no-results">Error displaying history. Please try again.</div>';
   }
 };
 
@@ -617,20 +651,50 @@ const deleteHistoryItem = (index) => {
   showToast("History item deleted.", "success");
 };
 
+// NEW FUNCTION: Reset all data on login
+const handleLogin = () => {
+  // Clear all existing data
+  historyData = [];
+  stats = { wins: 0, losses: 0 };
+  lastFetchedPeriod = null;
+  lastPrediction = null;
+  
+  // Clear localStorage
+  localStorage.removeItem('spyPredictorHistory');
+  localStorage.removeItem('spyPredictorStats');
+  
+  // Update UI
+  updateHistory();
+  updateStats();
+  DOM.currentPeriodDisplay.innerText = "Loading...";
+  DOM.currentPredictionDisplay.innerText = "Waiting for data...";
+  DOM.confidenceDisplay.innerText = "0%";
+  
+  showToast("Logged in. All previous data cleared.", "success");
+  
+  // Start fresh prediction
+  updatePrediction();
+};
+
 // Initialize
 const init = () => {
   console.log("Initializing application at", new Date().toISOString());
-  // Clear history and stats on login
-  clearHistory();
   updateTimer();
   setInterval(updatePrediction, UPDATE_INTERVAL);
+  
+  // Add event listener for reset button if it exists
+  if (DOM.resetButton) {
+    DOM.resetButton.addEventListener('click', handleLogin);
+  }
+  
+  // Initialize with existing data
   updateHistory();
   updateStats();
   updatePrediction();
 };
 
 init();
-     
-    </script>
+  
+      </script>
 </body>
 </html>
