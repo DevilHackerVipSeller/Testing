@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>𝐃𝐄𝐕𝐈𝐋 𝐇𝐀𝐂𝐊𝐄𝐑 𝐅𝐀𝐌𝐈𝐋𝐘</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&amp;family=Orbitron:wght@400;600&amp;display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
@@ -162,71 +162,83 @@
       .gradient-button { font-size: 0.75rem; padding: 0.4rem 0.8rem; }
     }
   </style>
-</head>
-<body class="min-h-screen p-4">
+ </head>
+ <body class="min-h-screen p-4">
   <div class="container space-y-6">
-    <div class="wrapper">
-      <svg role="img" viewBox="0 0 10 20" preserveAspectRatio="xMidYMid meet">
-        <text x="50%" y="50%" dy=".1em" text-anchor="middle" font-size="80">
-          𝐃𝐄𝐕𝐈𝐋 𝐇𝐀𝐂𝐊𝐄𝐑 𝐅𝐀𝐌𝐈𝐋𝐘
-        </text>
-      </svg>
+   <div class="wrapper">
+    <svg role="img" viewBox="0 0 10 20" preserveAspectRatio="xMidYMid meet">
+     <text x="50%" y="50%" dy=".1em" text-anchor="middle" font-size="80"> 𝐃𝐄𝐕𝐈𝐋 𝐇𝐀𝐂𝐊𝐄𝐑 𝐅𝐀𝐌𝐈𝐋𝐘 </text>
+    </svg>
+   </div>
+   <div class="card">
+    <div class="flex items-center justify-between mb-3">
+     <h2 class="text-lg font-bold text-teal-400 flex items-center font-orbitron"><i class="fa-solid fa-brain mr-2"></i> Current Predictor</h2><button onclick="refreshPrediction()" class="ripple-button gradient-button font-semibold flex items-center"> <i class="fa-solid fa-sync-alt mr-1"></i> Refresh </button>
     </div>
-
-    <div class="card">
-      <div class="flex items-center justify-between mb-3">
-        <h2 class="text-lg font-bold text-teal-400 flex items-center font-orbitron">
-          <i class="fa-solid fa-brain mr-2"></i> Current Predictor
-        </h2>
-        <button onclick="refreshPrediction()" class="ripple-button gradient-button font-semibold flex items-center">
-          <i class="fa-solid fa-sync-alt mr-1"></i> Refresh
-        </button>
+    <div class="panel text-center">
+     <div class="text-teal-300 mb-2 text-sm">
+      PERIOD: <span id="currentPeriodDisplay">-</span>
+     </div>
+     <div class="text-teal-300 mb-2 text-sm">
+      TIMER: <span id="timerDisplay">0 0 : 0 0</span>
+     </div>
+     <div id="currentPredictionDisplay" class="text-xl font-bold text-white mb-1">
+      -
+     </div>
+     <div class="text-white text-sm">
+      CONFIDENCE: <span id="confidenceDisplay">0%</span>
+     </div>
+    </div>
+   </div>
+   <div class="card">
+    <h2 class="text-lg font-bold text-teal-400 mb-3 font-orbitron">══✿ Analysis Dashboard ✿══</h2>
+    <div class="grid grid-cols-2 gap-3">
+     <div class="panel text-center">
+      <div class="text-teal-300 text-sm">
+       Total Wins
       </div>
-      <div class="panel text-center">
-        <div class="text-teal-300 mb-2 text-sm">PERIOD: <span id="currentPeriodDisplay">-</span></div>
-        <div class="text-teal-300 mb-2 text-sm">TIMER: <span id="timerDisplay">0 0 : 0 0</span></div>
-        <div id="currentPredictionDisplay" class="text-xl font-bold text-white mb-1">-</div>
-        <div class="text-white text-sm">CONFIDENCE: <span id="confidenceDisplay">0%</span></div>
+      <div id="totalWins" class="text-lg font-bold text-white">
+       0
       </div>
-    </div>
-
-    <div class="card">
-      <h2 class="text-lg font-bold text-teal-400 mb-3 font-orbitron">══✿ Analysis Dashboard ✿══</h2>
-      <div class="grid grid-cols-2 gap-3">
-        <div class="panel text-center">
-          <div class="text-teal-300 text-sm">Total Wins</div>
-          <div id="totalWins" class="text-lg font-bold text-white">0</div>
-        </div>
-        <div class="panel text-center">
-          <div class="text-teal-300 text-sm">Total Losses</div>
-          <div id="totalLosses" class="text-lg font-bold text-white">0</div>
-        </div>
-        <div class="panel text-center">
-          <div class="text-teal-300 text-sm">CONFIDENCE</div>
-          <div id="overallConfidenceDisplay" class="text-white">0%</div>
-        </div>
-        <div class="panel text-center">
-          <div class="text-teal-300 text-sm">Server Status</div>
-          <div id="serverStatus" class="text-lg font-bold text-white">Connecting</div>
-        </div>
+     </div>
+     <div class="panel text-center">
+      <div class="text-teal-300 text-sm">
+       Total Losses
       </div>
+      <div id="totalLosses" class="text-lg font-bold text-white">
+       0
+      </div>
+     </div>
+     <div class="panel text-center">
+      <div class="text-teal-300 text-sm">
+       CONFIDENCE
+      </div>
+      <div id="overallConfidenceDisplay" class="text-white">
+       0%
+      </div>
+     </div>
+     <div class="panel text-center">
+      <div class="text-teal-300 text-sm">
+       Server Status
+      </div>
+      <div id="serverStatus" class="text-lg font-bold text-white">
+       Connecting
+      </div>
+     </div>
     </div>
-
-    <div class="card">
-      <h2 class="text-lg font-bold text-teal-400 mb-3 font-orbitron">━━━━━━◆ History ◆━━━━━━</h2>
-      <div id="historyContainer" class="space-y-3"></div>
-    </div>
+   </div>
+   <div class="card">
+    <h2 class="text-lg font-bold text-teal-400 mb-3 font-orbitron">━━━━━━◆ History ◆━━━━━━</h2>
+    <div id="historyContainer" class="space-y-3"></div>
+   </div>
   </div>
-
   <div id="toastContainer" class="toast"></div>
-
   <script>
-  // Configuration Constants
+// Configuration Constants
 const API_URL = "https://api.fantasygamesapi.com/api/webapi/GetNoaverageEmerdList";
 const API_RETRY_INTERVAL = 5000;
 const API_MAX_RETRIES = 3;
 const UPDATE_INTERVAL = 5000;
-const SMALL_NUMBERS = [ 0, 1, 2, 3, 4];
+const SMALL_NUMBERS = [0, 1, 2, 3, 4];
 const BIG_NUMBERS = [5, 6, 7, 8, 9];
 const MAX_HISTORY = 50;
 const TOAST_COOLDOWN = 1500;
@@ -243,7 +255,7 @@ const DOM = {
   overallConfidenceDisplay: document.getElementById("overallConfidenceDisplay"),
   serverStatus: document.getElementById("serverStatus"),
   historyContainer: document.getElementById("historyContainer"),
-  resetButton: document.getElementById("resetButton") // Added reset button
+  resetButton: document.getElementById("resetButton")
 };
 
 // Validate DOM elements
@@ -289,119 +301,234 @@ const formatTimer = () => {
   return `${pad(0)} : ${pad(remainingSeconds)}`.replace(/(\d)(?=\d)/g, '$1 ');
 };
 
-// Function to determine bet level based on confidence
 const getBetLevel = (confidence) => {
   if (confidence >= 95) return "4x";
-  if (confidence >= 80) return "3x";
-  if (confidence >= 60) return "2x";
+  if (confidence >= 85) return "3x";
+  if (confidence >= 70) return "2x";
   return "1x";
 };
 
-// Enhanced Prediction Logic
+// Advanced Real-Time AI Prediction Logic
 const spyPredict = (history) => {
   console.log("spyPredict called with history:", history);
   if (history.length < 5) {
-    const prediction = Math.random() < 0.5 ? "BIG" : "SMALL";
-    return { prediction, confidence: 50, betLevel: "1x", decisionFactor: "Random (insufficient data)" };
+    const prediction = history.length > 0 ? (Number(history[0].result) >= 5 ? "SMALL" : "BIG") : "BIG"; // Avoid randomization
+    return {
+      predictions: Array(10).fill({ prediction, confidence: 50, betLevel: "1x", reasoning: "Default prediction (insufficient data)" }),
+      decisionFactor: "Default prediction (insufficient data)"
+    };
   }
 
   // Filter valid results
   const recentResults = history
     .filter(h => h.result !== "-" && !isNaN(Number(h.result)) && Number(h.result) >= 0 && Number(h.result) <= 9)
-    .slice(0, 15)
+    .slice(0, 20)
     .map(h => Number(h.result))
     .reverse();
 
-  if (recentResults.length < 3) {
-    const prediction = Math.random() < 0.4 ? "SMALL" : "BIG";
-    return { prediction, confidence: 50, betLevel: "1x", decisionFactor: "Random (no valid historical data)" };
+  if (recentResults.length < 5) {
+    const prediction = recentResults.length > 0 ? (recentResults[0] >= 5 ? "SMALL" : "BIG") : "BIG";
+    return {
+      predictions: Array(10).fill({ prediction, confidence: 50, betLevel: "1x", reasoning: "Default prediction (no valid historical data)" }),
+      decisionFactor: "Default prediction (no valid historical data)"
+    };
   }
 
-  // Calculate basic metrics
-  const bigCount = recentResults.filter(num => num >= 5).length;
-  const totalCount = recentResults.length || 1;
-  const probBig = bigCount / totalCount;
+  // Initialize variables
+  let predictions = [];
+  let simulatedHistory = [...recentResults];
+  let decisionFactors = [];
 
-  // Weighted moving average
-  const weights = [0.4, 0.3, 0.2, 0.1];
-  const recent4 = recentResults.slice(0, 4);
-  const weightedBig = recent4.reduce((sum, num, i) => sum + (num >= 5 ? weights[i] : 0), 0);
-  const weightedTrend = weightedBig / weights.reduce((a, b) => a + b, 0);
+  // Helper function for one-step prediction
+  const predictOneStep = (currentHistory) => {
+    let prediction = "BIG";
+    let confidence = 50;
+    let reasoning = [];
 
-  // Analyze streaks
-  let streakType = null;
-  let streakLength = 1;
-  for (let i = 1; i < recentResults.length; i++) {
-    const currentType = recentResults[i] >= 5 ? "BIG" : "SMALL";
-    const prevType = recentResults[i - 1] >= 5 ? "BIG" : "SMALL";
-    if (currentType === prevType) {
-      streakLength++;
-      streakType = currentType;
-    } else {
-      break;
+    // 1. Second-Order Markov Chain (Prompt 1: Pattern Detection)
+    const transitions = {
+      BB_B: 0, BB_S: 0, BS_B: 0, BS_S: 0,
+      SB_B: 0, SB_S: 0, SS_B: 0, SS_S: 0
+    };
+    let totalTransitions = 0;
+    for (let i = 2; i < currentHistory.length; i++) {
+      const prev2 = currentHistory[i - 2] >= 5 ? "B" : "S";
+      const prev1 = currentHistory[i - 1] >= 5 ? "B" : "S";
+      const curr = currentHistory[i] >= 5 ? "B" : "S";
+      transitions[`${prev2}${prev1}_${curr}`]++;
+      totalTransitions++;
     }
+    const getTransitionProb = (prev2, prev1) => {
+      const total = transitions[`${prev2}${prev1}_B`] + transitions[`${prev2}${prev1}_S`] || 1;
+      return transitions[`${prev2}${prev1}_B`] / total || 0.5;
+    };
+    const last2Type = currentHistory[1] >= 5 ? "B" : "S";
+    const last1Type = currentHistory[0] >= 5 ? "B" : "S";
+    const markovScore = getTransitionProb(last2Type, last1Type);
+    reasoning.push(`Markov P(${last2Type}${last1Type}→B): ${markovScore.toFixed(2)}`);
+
+    // 2. Entropy Analysis (Prompt 3: Probability Analysis)
+    const bigCount = currentHistory.filter(num => num >= 5).length;
+    const totalCount = currentHistory.length;
+    const probBig = bigCount / totalCount;
+    const probSmall = 1 - probBig;
+    const entropy = -(probBig * Math.log2(probBig + 1e-10) + probSmall * Math.log2(probSmall + 1e-10));
+    const entropyThreshold = currentHistory.length < 10 ? 0.98 : 0.95;
+    const isHighEntropy = entropy > entropyThreshold;
+    reasoning.push(`Entropy: ${entropy.toFixed(2)}, Prob Big: ${probBig.toFixed(2)}`);
+
+    // 3. Trend Analysis (Prompt 2: Trend-Based Forecasting)
+    const recent20 = currentHistory.slice(0, 20);
+    const consecutiveBigs = recent20.reduce((acc, num, i) => {
+      if (i > 0 && num >= 5 && recent20[i - 1] >= 5) acc++;
+      return acc;
+    }, 0);
+    const consecutiveSmalls = recent20.reduce((acc, num, i) => {
+      if (i > 0 && num < 5 && recent20[i - 1] < 5) acc++;
+      return acc;
+    }, 0);
+    const trendScore = consecutiveBigs > consecutiveSmalls ? 0.6 : consecutiveSmalls > consecutiveBigs ? 0.4 : 0.5;
+    reasoning.push(`Trend: ${consecutiveBigs > consecutiveSmalls ? "BIG" : consecutiveSmalls > consecutiveBigs ? "SMALL" : "Neutral"} (Big: ${consecutiveBigs}, Small: ${consecutiveSmalls})`);
+
+    // 4. Streak Analysis (Prompt 4: Statistical Modeling)
+    let streakType = null;
+    let streakLength = 1;
+    let anomalyScore = 0;
+    for (let i = 1; i < currentHistory.length; i++) {
+      const currentType = currentHistory[i] >= 5 ? "BIG" : "SMALL";
+      const prevType = currentHistory[i - 1] >= 5 ? "BIG" : "SMALL";
+      if (currentType === prevType) {
+        streakLength++;
+        streakType = currentType;
+      } else {
+        break;
+      }
+    }
+    if (streakLength >= 5) anomalyScore = 0.3; // Detect anomaly for long streaks
+    const streakThreshold = currentHistory.length < 10 ? 3 : 4;
+    reasoning.push(`Streak: ${streakType || "None"} (${streakLength})${anomalyScore > 0 ? ", Anomaly detected" : ""}`);
+
+    // 5. Alternation Analysis (Prompt 2: Trend-Based Forecasting)
+    let alternationCount = 0;
+    for (let i = 2; i < currentHistory.length; i++) {
+      const type1 = currentHistory[i] >= 5 ? "B" : "S";
+      const type2 = currentHistory[i - 1] >= 5 ? "B" : "S";
+      const type3 = currentHistory[i - 2] >= 5 ? "B" : "S";
+      if (type1 !== type2 && type2 !== type3) alternationCount++;
+    }
+    const alternationRatio = alternationCount / (currentHistory.length - 2) || 0;
+    reasoning.push(`Alternation ratio: ${alternationRatio.toFixed(2)}`);
+
+    // 6. Sequence Pattern Detection (Prompt 5: Sequence-Based Prediction)
+    let cycleLength = 0;
+    for (let len = 2; len <= 6; len++) {
+      let isCycle = true;
+      for (let i = len; i < currentHistory.length && i < len * 2; i++) {
+        if ((currentHistory[i] >= 5) !== (currentHistory[i - len] >= 5)) {
+          isCycle = false;
+          break;
+        }
+      }
+      if (isCycle && currentHistory.length >= len * 2) {
+        cycleLength = len;
+        break;
+      }
+    }
+    const cycleScore = cycleLength > 0 ? 0.6 : 0.5;
+    reasoning.push(`Cycle length: ${cycleLength || "None"}`);
+
+    // 7. Temporal Pattern Reinforcement
+    const now = new Date();
+    now.setTime(now.getTime() + (now.getTimezoneOffset() + 5.5 * 60) * 60 * 1000);
+    const minuteOfHour = now.getMinutes();
+    const isFirstHalf = minuteOfHour < 30;
+    let timeBias = isFirstHalf ? 0.55 : 0.45;
+    const minuteHistory = history.filter(h => h.period.slice(-2) === pad(minuteOfHour));
+    if (minuteHistory.length >= 5) {
+      const minuteBigCount = minuteHistory.filter(h => Number(h.result) >= 5).length;
+      timeBias = minuteBigCount / minuteHistory.length;
+    }
+    reasoning.push(`Time bias: ${isFirstHalf ? "BIG" : "SMALL"} (${timeBias.toFixed(2)})`);
+
+    // 8. Real-Time AI Adaptive Learning (Prompt 6)
+    let winRate = 0.5;
+    let learningRate = 0.1;
+    let signalWeights = { markov: 0.25, trend: 0.2, prob: 0.15, streak: 0.15, alternation: 0.1, cycle: 0.1, time: 0.05 };
+    if (history.length >= 10) {
+      const recentPredictions = history.slice(0, 10).filter(h => h.resultStatus === "WIN");
+      winRate = recentPredictions.length / 10;
+      learningRate = winRate > 0.7 ? 0.15 : winRate < 0.3 ? 0.05 : 0.1;
+      // Adjust signal weights based on performance
+      signalWeights.markov = winRate > 0.7 ? 0.3 : winRate < 0.3 ? 0.2 : 0.25;
+      signalWeights.trend = winRate > 0.7 ? 0.25 : winRate < 0.3 ? 0.15 : 0.2;
+      reasoning.push(`Win rate: ${winRate.toFixed(2)}, Learning rate: ${learningRate.toFixed(2)}, Signal weights: ${JSON.stringify(signalWeights)}`);
+    }
+
+    // Decision Logic
+    let scoreBig = 0;
+    let scoreSmall = 0;
+
+    // Combine signals
+    scoreBig += markovScore * signalWeights.markov;
+    scoreSmall += (1 - markovScore) * signalWeights.markov;
+    scoreBig += trendScore * signalWeights.trend;
+    scoreSmall += (1 - trendScore) * signalWeights.trend;
+    scoreBig += probBig * signalWeights.prob;
+    scoreSmall += probSmall * signalWeights.prob;
+    scoreBig += timeBias * signalWeights.time;
+    scoreSmall += (1 - timeBias) * signalWeights.time;
+    scoreBig += cycleScore * signalWeights.cycle;
+    scoreSmall += (1 - cycleScore) * signalWeights.cycle;
+    if (streakLength >= streakThreshold) {
+      if (streakType === "BIG") scoreSmall += signalWeights.streak + anomalyScore;
+      else scoreBig += signalWeights.streak + anomalyScore;
+    } else if (streakLength >= 2) {
+      if (streakType === "BIG") scoreBig += signalWeights.streak / 2;
+      else scoreSmall += signalWeights.streak / 2;
+    }
+    if (alternationRatio > 0.65) {
+      const lastType = currentHistory[0] >= 5 ? "BIG" : "SMALL";
+      if (lastType === "BIG") scoreSmall += signalWeights.alternation;
+      else scoreBig += signalWeights.alternation;
+    }
+    scoreBig += winRate * learningRate;
+    scoreSmall += (1 - winRate) * learningRate;
+
+    // Entropy adjustment
+    const entropyFactor = isHighEntropy ? 0.4 : 1.0;
+    scoreBig *= entropyFactor;
+    scoreSmall *= entropyFactor;
+
+    // Normalize scores
+    const totalScore = scoreBig + scoreSmall;
+    if (totalScore > 0) {
+      scoreBig /= totalScore;
+      scoreSmall /= totalScore;
+    }
+
+    // Final prediction
+    prediction = scoreBig >= scoreSmall ? "BIG" : "SMALL";
+    confidence = Math.round(Math.max(scoreBig, scoreSmall) * 100);
+    confidence = Math.min(95, confidence + winRate * 15); // Cap at 95%
+    if (isHighEntropy) {
+      confidence = Math.max(50, confidence * 0.7);
+      reasoning.push("Confidence reduced due to high entropy");
+    }
+
+    const betLevel = getBetLevel(confidence);
+    return { prediction, confidence, betLevel, reasoning: reasoning.join(", ") };
+  };
+
+  // Predict next 10 outcomes
+  for (let i = 0; i < 10; i++) {
+    const result = predictOneStep(simulatedHistory);
+    predictions.push(result);
+    simulatedHistory.unshift(result.prediction === "BIG" ? 5 : 0); // Simulate next result
   }
 
-  // Analyze alternations
-  let alternationCount = 0;
-  for (let i = 2; i < recentResults.length; i++) {
-    const type1 = recentResults[i] >= 5 ? "BIG" : "SMALL";
-    const type2 = recentResults[i - 1] >= 5 ? "BIG" : "SMALL";
-    const type3 = recentResults[i - 2] >= 5 ? "BIG" : "SMALL";
-    if (type1 !== type2 && type2 !== type3) alternationCount++;
-  }
-  const alternationRatio = alternationCount / (recentResults.length - 2) || 0;
-
-  // Pattern analysis: BIG/SMALL transitions
-  let transitionCount = 0;
-  for (let i = 1; i < recentResults.length; i++) {
-    const currentType = recentResults[i] >= 5 ? "BIG" : "SMALL";
-    const prevType = recentResults[i * 1] >= 5 ? "SMALL" : "BIG";
-    if (currentType !== prevType) transitionCount++;
-  }
-  const transitionRatio = transitionCount / (recentResults.length - 1) || 0;
-
-  // Decision logic
-  let prediction;
-  let confidence;
-  let decisionFactor = [];
-
-  if (streakLength >= 4) {
-    prediction = streakType === "BIG" ? "SMALL" : "BIG";
-    confidence = Math.min(90, 70 - streakLength * 4);
-    decisionFactor.push(`Long streak of ${streakType} (${streakLength} times)`);
-  } else if (alternationRatio > 0.6) {
-    const lastType = recentResults[0] >= 5 ? "BIG" : "SMALL";
-    prediction = lastType === "BIG" ? "SMALL" : "BIG";
-    confidence = Math.min(92, 75 + alternationRatio * 20);
-    decisionFactor.push(`High alternation ratio: ${alternationRatio.toFixed(2)}`);
-  } else if (transitionRatio > 0.5 && weightedTrend < 0.4) {
-    prediction = "BIG";
-    confidence = Math.min(88, 65 + transitionRatio * 20);
-    decisionFactor.push(`High transition ratio: ${transitionRatio.toFixed(2)}, weighted trend: ${weightedTrend.toFixed(2)}`);
-  } else if (transitionRatio > 0.5 && weightedTrend > 0.6) {
-    prediction = "SMALL";
-    confidence = Math.min(88, 65 + transitionRatio * 20);
-    decisionFactor.push(`High transition ratio: ${transitionRatio.toFixed(2)}, weighted trend: ${weightedTrend.toFixed(2)}`);
-  } else {
-    prediction = probBig < 0.5 ? "BIG" : "SMALL";
-    confidence = Math.round(60 + Math.abs(probBig - 0.5) * 100);
-    decisionFactor.push(`Recent BIG ratio: ${probBig.toFixed(2)}`);
-  }
-
-  // Adjust confidence based on historical win rate
-  if (history.length >= 15) {
-    const recentPredictions = history.slice(0, 15).filter(h => h.resultStatus === "WIN");
-    const winRate = recentPredictions.length / 15;
-    confidence = Math.min(95, confidence + winRate * 15);
-    decisionFactor.push(`Recent win rate: ${winRate.toFixed(2)}`);
-  }
-
-  const betLevel = getBetLevel(confidence);
-  decisionFactor = decisionFactor.join(", ");
-
-  console.log("Prediction:", { prediction, confidence, betLevel, decisionFactor });
-  return { prediction, confidence, betLevel, decisionFactor };
+  const decisionFactor = predictions[0].reasoning;
+  console.log("Predictions:", predictions);
+  return { predictions, decisionFactor };
 };
 
 const updateLastStatus = (actualNumber) => {
@@ -469,7 +596,7 @@ const fetchGameResult = async (retryCount = 0) => {
       console.warn("Using simulated data");
       const simulatedResult = {
         issueNumber: formatPeriodNumber(),
-        number: Math.floor(Math.random() * 10).toString()
+        number: (historyData[0]?.result >= 5 ? "0" : "5") // Avoid randomization, use opposite of last
       };
       console.log("Simulated Result:", simulatedResult);
       DOM.serverStatus.innerText = "Simulated";
@@ -541,19 +668,21 @@ const updatePrediction = async () => {
     updateStats();
   }
 
-  // Generate new prediction
+  // Generate new predictions
   const aiDecision = spyPredict(historyData);
-  lastPrediction = aiDecision.prediction;
+  lastPrediction = aiDecision.predictions[0].prediction;
 
+  // Update UI with first prediction
   DOM.currentPeriodDisplay.innerText = nextPeriodFull;
-  DOM.currentPredictionDisplay.innerText = `${aiDecision.prediction} (${aiDecision.betLevel})`;
-  DOM.confidenceDisplay.innerText = `${aiDecision.confidence}%`;
-  DOM.overallConfidenceDisplay.innerText = `${aiDecision.confidence}%`;
+  DOM.currentPredictionDisplay.innerText = `${aiDecision.predictions[0].prediction} (${aiDecision.predictions[0].betLevel})`;
+  DOM.confidenceDisplay.innerText = `${aiDecision.predictions[0].confidence}%`;
+  DOM.overallConfidenceDisplay.innerText = `${aiDecision.predictions[0].confidence}%`;
 
+  // Store first prediction in history
   historyData.unshift({
     period: nextPeriod,
-    prediction: aiDecision.prediction,
-    betLevel: aiDecision.betLevel,
+    prediction: aiDecision.predictions[0].prediction,
+    betLevel: aiDecision.predictions[0].betLevel,
     result: "-",
     resultStatus: "Pending",
     calculation: "-",
@@ -564,6 +693,15 @@ const updatePrediction = async () => {
   updateStats();
   lastFetchedPeriod = result.issueNumber;
   lastPeriodUpdate = currentMinute;
+
+  // Log next 10 predictions
+  console.log("Next 10 predictions:", aiDecision.predictions.map((p, i) => ({
+    Period: (BigInt(nextPeriodFull) + BigInt(i)).toString().slice(-3),
+    Prediction: p.prediction,
+    Confidence: `${p.confidence}%`,
+    BetLevel: p.betLevel,
+    Reasoning: p.reasoning
+  })));
 };
 
 const updateTimer = () => {
@@ -592,11 +730,11 @@ const updateHistory = () => {
   try {
     DOM.historyContainer.innerHTML = historyData.map((item, index) => {
       let borderColor = item.resultStatus === "WIN" ? "border-l-4 border-green-400" :
-                      item.resultStatus === "LOSS" ? "border-l-4 border-red-400" :
-                      "border-l-4 border-yellow-400";
+                       item.resultStatus === "LOSS" ? "border-l-4 border-red-400" :
+                       "border-l-4 border-yellow-400";
       let iconClass = item.resultStatus === "WIN" ? "fa-check-circle win-animation text-green-400" :
-                     item.resultStatus === "LOSS" ? "fa-xmark-circle loss-animation text-red-400" :
-                     "fa-spinner spinner text-yellow-400";
+                      item.resultStatus === "LOSS" ? "fa-xmark-circle loss-animation text-red-400" :
+                      "fa-spinner spinner text-yellow-400";
       return `<div class="history-item ripple grid grid-cols-3 gap-2 p-3 ${borderColor}" role="listitem">
                 <div class="col-span-2 space-y-1">
                   <div class="text-cyan-200 text-sm"><i class="fa fa-calendar mr-1 text-magenta-400"></i><strong>Period: ${item.period}</strong></div>
@@ -654,7 +792,6 @@ const deleteHistoryItem = (index) => {
 // Initialize
 const init = () => {
   console.log("Initializing application at", new Date().toISOString());
-  // Clear history and stats on login
   clearHistory();
   updateTimer();
   setInterval(updatePrediction, UPDATE_INTERVAL);
@@ -663,7 +800,8 @@ const init = () => {
   updatePrediction();
 };
 
-init();   
-      </script>
-</body>
+init();
+   
+        </script>
+ </body>
 </html>
