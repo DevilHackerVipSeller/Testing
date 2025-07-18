@@ -3,609 +3,384 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>𝐃𝐄𝐕𝐈𝐋 𝐇𝐀𝐂𝐊𝐄𝐑 𝐅𝐀𝐌𝐈𝐋𝐘</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Orbitron:wght@500;600&display=swap" rel="stylesheet">
+  <title>Nexify Predictor</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    @keyframes bounce { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
-    @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(2px); } 50% { transform: translateX(-2px); } 75% { transform: translateX(2px); } }
-    @keyframes dash { 0% { stroke-dashoffset: 10; } 100% { stroke-dashoffset: 0; } }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-    @keyframes ripple { 0% { transform: scale(0); opacity: 0.4; } 100% { transform: scale(4); opacity: 0; } }
-
-    .ripple-button, .ripple {
-      position: relative;
+    html, body {
+      margin: 0;
+      padding: 0;
       overflow: hidden;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      font-family: 'Inter', sans-serif;
+      background: #0a0a0a;
     }
-    .ripple-button:hover, .ripple:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0, 255, 255, 0.3);
-    }
-    .ripple-button:active, .ripple:active {
-      transform: scale(0.98);
-    }
-    .ripple-button::after, .ripple::after {
-      content: '';
-      position: absolute;
+    iframe {
+      position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 255, 255, 0.3);
-      border-radius: 50%;
-      transform: scale(0);
-      opacity: 0;
-      pointer-events: none;
-      z-index: 1;
-    }
-    .ripple-button.ripple-effect::after, .ripple.ripple-effect::after {
-      animation: ripple 0.5s ease-out;
-    }
-
-    body {
-      background: linear-gradient(to right, #0a0e1a, #1a0a3a, #0a1a0e);
-      background-size: 200% 200%;
-      animation: gradientShift 15s ease infinite;
-      overflow-x: hidden;
-      font-family: 'Poppins', sans-serif;
-    }
-
-    .wrapper svg {
-      width: 100%;
-      height: 100%;
-      max-height: 50px;
-    }
-    .wrapper svg text {
-      stroke: #00FFFF;
-      font-size: 10px;
-      font-family: 'Orbitron', sans-serif;
-      fill: #FFD700;
-      stroke-width: 1;
-      animation: dash 2.5s linear infinite;
-      text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
-    }
-
-    .win-animation { animation: bounce 0.5s ease-in-out infinite; }
-    .loss-animation { animation: shake 0.5s ease-in-out; }
-    .spinner { animation: spin 1s linear infinite; }
-
-    .toast {
-      position: fixed;
-      top: 90px;
-      right: 18px;
-      left: 18px;
-      background: rgba(0, 0, 0, 0.8);
-      color: #00FFFF;
-      padding: 12px 14px;
-      border-radius: 8px;
-      border: 1px solid #00FFFF;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      z-index: 1000;
-      box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
-      font-size: 0.75rem;
-    }
-    .toast.show { opacity: 1; }
-
-    .card {
-      background: linear-gradient(145deg, #1a1a2e, #252540);
-      border-radius: 12px;
-      border: 1px solid rgba(0, 255, 255, 0.3);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      padding: 0.5rem;
-      margin-bottom: 0.75rem;
-    }
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 10px 20px rgba(0, 255, 255, 0.2);
-    }
-
-    .gradient-button {
-      background: linear-gradient(to right, #00FFFF, #FF00FF);
+      z-index: 0;
       border: none;
-      border-radius: 10px;
-      padding: 0.375rem 0.75rem;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+    }
+    .glass {
+      background: rgba(20, 20, 20, 0.75);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    }
+    #floatingBox {
+      position: fixed;
+      bottom: 40px;
+      right: 20px;
+      z-index: 999;
+      touch-action: none;
       transition: all 0.3s ease;
+      width: 310px;
+      padding: 1.0rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
-    .gradient-button:hover {
-      background: linear-gradient(to right, #FF00FF, #00FFFF);
-      box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
-      transform: translateY(-2px);
+    .prediction-card {
+      color: #34d399;
+      background: rgba(34, 197, 94, 0.15);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      border-radius: 12px;
+      padding: 14px;
+      transition: transform 0.2s;
+      width: 100%;
     }
-
-    .history-item {
-      background: linear-gradient(145deg, #1a1a2e, #252540);
-      border-radius: 10px;
-      transition: all 0.3s ease;
-      padding: 0.5rem;
+    .prediction-card:hover {
+      transform: scale(1.02);
     }
-    .history-item:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(0, 255, 255, 0.15);
+    .stats {
+      font-size: 0.8rem;
+      color: #34d399;
+      margin-top: 12px;
+      display: flex;
+      justify-content: space-between;
     }
-
-    .no-results {
-      border: 2px solid red;
+    #timer, #accuracy {
+      font-size: 0.8rem;
+      color: #34d399;
+    }
+    #latestItem {
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+    .title {
+      font-size: 0.99rem;
+      color: #ffffff; /* White color for title */
+      font-weight: 700;
+      margin-bottom: 16px;
       text-align: center;
-      color: #FF5555;
-      padding: 10px;
-      font-size: 0.75rem;
-    }
-
-    @media (max-width: 640px) {
-      .container { padding: 0 0.25rem; }
-      .wrapper svg text { font-size: 16px; }
-      .card { padding: 0.375rem; }
-      .toast { top: 60px; }
     }
   </style>
 </head>
-<body class="text-gray-200 font-poppins min-h-screen p-4">
-  <div class="container max-w-md mx-auto space-y-6">
-    <div class="wrapper">
-      <svg role="img" viewBox="0 0 10 30" preserveAspectRatio="xMidYMid meet">
-        <text x="50%" y="50%" dy=".1em" text-anchor="middle" font-size="80">
-          𝐃𝐄𝐕𝐈𝐋 𝐇𝐀𝐂𝐊𝐄𝐑 𝐅𝐀𝐌𝐈𝐋𝐘
-        </text>
-      </svg>
-    </div>
+<body class="bg-black text-white">
+  <!-- 🌐 Background Website -->
+  <iframe src="https://51game5.com/#/"></iframe>
 
-    <div class="card shadow-lg">
-      <div class="flex items-center justify-between mb-2">
-        <h2 class="text-lg font-bold text-cyan-400 flex items-center font-orbitron">
-          <i class="fa-solid fa-brain mr-2"></i> Current Predictor
-        </h2>
-        <button onclick="refreshPrediction()" class="ripple-button gradient-button text-white font-semibold rounded-lg flex items-center">
-          <i class="fa-solid fa-sync-alt mr-1"></i> Refresh
-        </button>
+  <!-- 🪟 Floating Window -->
+  <div id="floatingBox" class="glass">
+    <!-- 🎯 Title -->
+    <div class="title">𝐓𝐇𝐄 𝐒𝐏𝐘 𝐏𝐑𝐄𝐃𝐈𝐂𝐓𝐎𝐑 V2.0</div>
+    <!-- 🟪 Latest Prediction -->
+    <div id="latest" class="prediction-card">
+      <div id="latestItem" class="font-semibold">Loading...</div>
+      <div class="stats">
+        <div id="timer">Timer: 00 : 60</div>|<div id="accuracy">Accuracy: --%</div> 
       </div>
-      <div class="bg-gray-900 rounded-lg p-3 text-center">
-        <div class="text-cyan-300 mb-2 text-sm">PERIOD: <span id="currentPeriodDisplay">-</span></div>
-        <div class="text-cyan-300 mb-2 text-sm">TIMER: <span id="timerDisplay">0 0 : 0 0</span></div>
-        <div id="currentPredictionDisplay" class="text-xl font-bold text-cyan-200 mb-1">-</div>
-        <div class="text-cyan-200 text-sm">CONFIDENCE: <span id="confidenceDisplay">0%</span></div>
-      </div>
-    </div>
-
-    <div class="card shadow-lg">
-      <h2 class="text-lg font-bold text-cyan-400 mb-2 font-orbitron">═══✿ Analysis Dashboard ✿═══</h2>
-      <div class="grid grid-cols-2 gap-2">
-        <div class="bg-gray-900 rounded-lg p-3 text-center">
-          <div class="text-cyan-400 text-sm">Total Wins</div>
-          <div id="totalWins" class="text-lg font-bold text-magenta-400">0</div>
-        </div>
-        <div class="bg-gray-900 rounded-lg p-3 text-center">
-          <div class="text-cyan-300 text-sm">Total Losses</div>
-          <div id="totalLosses" class="text-lg font-bold text-magenta-400">0</div>
-        </div>
-        <div class="bg-gray-900 rounded-lg p-3 text-center">
-          <div class="text-cyan-300 text-sm">CONFIDENCE</div>
-          <div id="overallConfidenceDisplay">0%</div>
-        </div>
-        <div class="bg-gray-900 rounded-lg p-3 text-center">
-          <div class="text-cyan-300 text-sm">Server Status</div>
-          <div id="serverStatus" class="text-xl font-bold text-[#FFFFFF]">Connecting</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card shadow-lg">
-      <h2 class="text-lg font-bold text-cyan-400 mb-2 font-orbitron">━━━━━━━━◆ History ◆━━━━━━━━</h2>
-      <div id="historyContainer" class="space-y-2"></div>
-      <button onclick="clearHistory()" class="ripple-button gradient-button mt-3 w-full text-white font-semibold rounded-lg">Clear All History</button>
     </div>
   </div>
 
-  <div id="toastContainer" class="toast"></div>
-
+  <!-- 🔮 Script Logic -->
   <script>
- // Configuration Constants
-const API_URL = "Https://kbtpredictor.shop/API/1_min.php/api/webapi/GetNoaverageEmerdList";
-const API_RETRY_INTERVAL = 5000;
-const API_MAX_RETRIES = 3;
-const UPDATE_INTERVAL = 5000;
-const SMALL_NUMBERS = [5, 6, 7, 8, 9];
-const BIG_NUMBERS = [0, 1, 2, 3, 4];
-const MAX_HISTORY = 50;
-const TOAST_COOLDOWN = 1500;
+    let pastResults = [];
+    let lastPredictedMinute = -1;
+    let lastBigSmall = '';
+    let predictionHistory = [];
 
-// DOM Elements Cache
-const DOM = {
-  toastContainer: document.getElementById("toastContainer"),
-  currentPeriodDisplay: document.getElementById("currentPeriodDisplay"),
-  timerDisplay: document.getElementById("timerDisplay"),
-  currentPredictionDisplay: document.getElementById("currentPredictionDisplay"),
-  confidenceDisplay: document.getElementById("confidenceDisplay"),
-  totalWins: document.getElementById("totalWins"),
-  totalLosses: document.getElementById("totalLosses"),
-  overallConfidenceDisplay: document.getElementById("overallConfidenceDisplay"),
-  serverStatus: document.getElementById("serverStatus"),
-  historyContainer: document.getElementById("historyContainer")
-};
-
-// Validate DOM elements
-Object.values(DOM).forEach((el, index) => {
-  if (!el) console.error(`DOM element at index ${index} is null. Check HTML IDs.`);
-});
-
-// State
-let historyData = JSON.parse(localStorage.getItem('spyPredictorHistory')) || [];
-let lastFetchedPeriod = null;
-let lastPrediction = null;
-let stats = JSON.parse(localStorage.getItem('spyPredictorStats')) || { wins: 0, losses: 0 };
-let isFetching = false;
-let lastPeriodUpdate = null;
-let lastToastTime = 0;
-
-// Utility Functions
-const showToast = (message, type = "info", duration = 1500) => {
-  const now = Date.now();
-  if (now - lastToastTime < TOAST_COOLDOWN) return;
-  lastToastTime = now;
-  if (!DOM.toastContainer) return console.error("Toast container not found");
-  DOM.toastContainer.textContent = message;
-  DOM.toastContainer.className = `toast show ${type}`;
-  setTimeout(() => DOM.toastContainer.className = "toast", duration);
-};
-
-const formatPeriodNumber = () => {
-  const now = new Date();
-  now.setTime(now.getTime() + (now.getTimezoneOffset() + 5.5 * 60) * 60 * 1000);
-  const yearMonthDay = now.toISOString().slice(0, 10).replace(/-/g, '');
-  const minutes = now.getHours() * 60 + now.getMinutes();
-  return yearMonthDay + "1000" + (10001 + minutes).toString();
-};
-
-const pad = (num) => num.toString().padStart(2, '0');
-
-const formatTimer = () => {
-  const now = new Date();
-  now.setTime(now.getTime() + (now.getTimezoneOffset() + 5.5 * 60) * 60 * 1000);
-  const seconds = now.getSeconds();
-  const remainingSeconds = 60 - seconds;
-  return `${pad(0)} : ${pad(remainingSeconds)}`.replace(/(\d)(?=\d)/g, '$1 ');
-};
-
-// Function to determine bet level based on confidence
-const getBetLevel = (confidence) => {
-  if (confidence >= 95) return "4x";
-  if (confidence >= 80) return "3x";
-  if (confidence >= 60) return "2x";
-  return "1x";
-};
-
-// Enhanced Prediction Logic
-const spyPredict = (history) => {
-  console.log("spyPredict called with history:", history);
-  if (history.length < 3) {
-    const prediction = Math.random() < 0.5 ? "SMALL" : "BIG";
-    return { prediction, confidence: 50, betLevel: "1x", decisionFactor: "Random (insufficient data)" };
-  }
-
-  const recentResults = history
-    .filter(h => h.result !== "-")
-    .slice(0, 10)
-    .map(h => Number(h.result))
-    .reverse();
-
-  // Calculate basic metrics
-  const bigCount = recentResults.filter(num => num >= 5).length;
-  const totalCount = recentResults.length || 1;
-  const probBig = bigCount / totalCount;
-
-  // Analyze streaks
-  let streakType = null;
-  let streakLength = 1;
-  for (let i = 1; i < recentResults.length; i++) {
-    const currentType = recentResults[i] >= 5 ? "BIG" : "SMALL";
-    const prevType = recentResults[i - 1] >= 5 ? "BIG" : "SMALL";
-    if (currentType === prevType) {
-      streakLength++;
-      streakType = currentType;
-    } else {
-      break;
+    // Helper function to calculate variance of past results
+    function calculateVariance(numbers) {
+      if (numbers.length === 0) return 0;
+      const mean = numbers.reduce((a, b) => a + b, 0) / numbers.length;
+      return numbers.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / numbers.length;
     }
-  }
 
-  // Analyze alternations
-  let alternationCount = 0;
-  for (let i = 2; i < recentResults.length; i++) {
-    const type1 = recentResults[i] >= 5 ? "BIG" : "SMALL";
-    const type2 = recentResults[i - 1] >= 5 ? "BIG" : "SMALL";
-    const type3 = recentResults[i - 2] >= 5 ? "BIG" : "SMALL";
-    if (type1 !== type2 && type2 !== type3) alternationCount++;
-  }
-  const alternationRatio = alternationCount / (recentResults.length - 2) || 0;
-
-  // Decision logic
-  let prediction;
-  let confidence;
-  let decisionFactor = [];
-
-  if (streakLength >= 3) {
-    prediction = streakType === "BIG" ? "SMALL" : "BIG";
-    confidence = Math.min(85, 65 + streakLength * 5);
-    decisionFactor.push(`Long streak of ${streakType} (${streakLength} times)`);
-  } else if (alternationRatio > 0.5) {
-    const lastType = recentResults[0] >= 5 ? "BIG" : "SMALL";
-    prediction = lastType === "BIG" ? "SMALL" : "BIG";
-    confidence = Math.min(90, 70 + alternationRatio * 20);
-    decisionFactor.push(`High alternation ratio: ${alternationRatio.toFixed(2)}`);
-  } else {
-    prediction = probBig < 0.5 ? "BIG" : "SMALL";
-    confidence = Math.round(60 + Math.abs(probBig - 0.5) * 80);
-    decisionFactor.push(`Recent BIG ratio: ${probBig.toFixed(2)}`);
-  }
-
-  // Adjust confidence based on historical win rate
-  if (history.length >= 10) {
-    const recentPredictions = history.slice(0, 10).filter(h => h.resultStatus === "WIN");
-    const winRate = recentPredictions.length / 10;
-    confidence = Math.min(95, confidence + winRate * 10);
-    decisionFactor.push(`Recent win rate: ${winRate.toFixed(2)}`);
-  }
-
-  const betLevel = getBetLevel(confidence);
-  decisionFactor = decisionFactor.join(", ");
-
-  console.log("Prediction:", { prediction, confidence, betLevel, decisionFactor });
-  return { prediction, confidence, betLevel, decisionFactor };
-};
-
-const updateLastStatus = (actualNumber) => {
-  console.log("updateLastStatus called with actualNumber:", actualNumber, "lastPrediction:", lastPrediction);
-  if (!lastPrediction) return "Pending";
-  const actualType = actualNumber >= 5 ? "BIG" : "SMALL";
-  const status = lastPrediction === actualType ? "WIN" : "LOSS";
-  stats[status === "WIN" ? "wins" : "losses"]++;
-  localStorage.setItem('spyPredictorStats', JSON.stringify(stats));
-  console.log("Updated stats:", stats);
-  return status;
-};
-
-const saveHistory = () => {
-  historyData = historyData.slice(0, MAX_HISTORY);
-  try {
-    localStorage.setItem('spyPredictorHistory', JSON.stringify(historyData));
-    console.log("History saved:", historyData);
-  } catch (e) {
-    showToast("Warning: Failed to save history.", "warning");
-    console.error("History save error:", e);
-  }
-};
-
-const fetchGameResult = async (retryCount = 0) => {
-  if (isFetching) {
-    console.log("Fetch skipped: already fetching");
-    return null;
-  }
-  isFetching = true;
-  DOM.serverStatus.innerText = `Connecting (Attempt ${retryCount + 1})`;
-  DOM.currentPredictionDisplay.innerHTML = '<i class="fa fa-spinner spinner"></i>';
-  try {
-    const response = await fetch(API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        pageSize: 10,
-        pageNo: 1,
-        typeId: 1,
-        language: 0,
-        random: "4a0522c6ecd8410496260e686be2a57c",
-        signature: "334B5E70A0C9B8918B0B15E517E2069C",
-        timestamp: Math.floor(Date.now() / 1000)
-      })
-    });
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    const data = await response.json();
-    console.log("Raw API response:", data); // Log raw response for debugging
-    if (!data?.data?.list?.[0]?.issueNumber || !data.data.list[0].number) {
-      throw new Error("Invalid API response: missing issueNumber or number");
+    // Helper function to calculate standard deviation
+    function calculateStdDev(numbers) {
+      return Math.sqrt(calculateVariance(numbers));
     }
-    DOM.serverStatus.innerText = "Connected";
-    showToast("Fetched game data.", "success");
-    console.log("API Result:", data.data.list[0]);
-    return data.data.list[0];
-  } catch (e) {
-    console.error("API Error:", e.message, "Retry count:", retryCount);
-    DOM.serverStatus.innerText = `Retry ${retryCount + 1}/${API_MAX_RETRIES}`;
-    if (retryCount < API_MAX_RETRIES) {
-      await new Promise(resolve => setTimeout(resolve, API_RETRY_INTERVAL));
-      return fetchGameResult(retryCount + 1);
-    } else {
-      showToast("API failed. Using simulated data.", "error");
-      console.warn("Using simulated data");
-      const simulatedResult = {
-        issueNumber: formatPeriodNumber(),
-        number: Math.floor(Math.random() * 10).toString()
-      };
-      console.log("Simulated Result:", simulatedResult);
-      DOM.serverStatus.innerText = "Simulated";
-      return simulatedResult;
-    }
-  } finally {
-    isFetching = false;
-  }
-};
 
-const updatePrediction = async () => {
-  console.log("updatePrediction called at", new Date().toISOString());
-  const now = new Date();
-  now.setTime(now.getTime() + (now.getTimezoneOffset() + 5.5 * 60) * 60 * 1000);
-  const currentMinute = now.getHours() * 60 + now.getMinutes();
-  const result = await fetchGameResult();
-
-  if (!result) {
-    console.warn("No result fetched, updating UI with existing data");
-    showToast("No new data available.", "warning");
-    updateHistory();
-    updateStats();
-    return;
-  }
-
-  console.log("Fetched result:", result);
-
-  if (lastFetchedPeriod !== result.issueNumber || lastPeriodUpdate !== currentMinute) {
-    console.log("Processing result for period:", result.issueNumber);
-    // Update previous period if pending
-    if (historyData.length > 0 && historyData[0].resultStatus === "Pending") {
-      const actualNumber = Number(result.number);
-      if (isNaN(actualNumber)) {
-        console.error("Invalid result number:", result.number);
-        showToast("Error: Invalid API result number.", "error");
-        updateHistory();
-        updateStats();
-        return;
+    // Detect streaks (consecutive Big or Small)
+    function detectStreaks(results) {
+      if (results.length < 2) return { type: null, length: 0 };
+      let streakType = results[results.length - 5] >= 5.4 ? "Big" : "Small";
+      let streakLength = 1;
+      for (let i = results.length - 4; i >= 0; i--) {
+        const currentType = results[i] >= 5 ? "Big" : "Small";
+        if (currentType === streakType) streakLength++;
+        else break;
       }
-      const status = updateLastStatus(actualNumber);
-      const resultType = actualNumber >= 5 ? "BIG" : "SMALL";
-      historyData[0].result = actualNumber.toString();
-      historyData[0].resultStatus = status;
-      historyData[0].calculation = `${actualNumber} (${resultType})`;
-      showToast(`Result: ${status} (${resultType})`, status === "WIN" ? "success" : "error");
-      saveHistory();
-      updateHistory();
-      updateStats();
+      return { type: streakType, length: streakLength };
     }
 
-    // Generate new prediction
-    const aiDecision = spyPredict(historyData);
-    lastPrediction = aiDecision.prediction;
-    const nextPeriodFull = (BigInt(result.issueNumber) + 1n).toString();
-    const nextPeriod = nextPeriodFull.slice(-3);
+    // Detect cyclic patterns (e.g., repeating sequences)
+    function detectCyclicPattern(results, maxLength = 5) {
+      for (let len = 2; len <= maxLength && len <= results.length / 2; len++) {
+        const recent = results.slice(-len);
+        const previous = results.slice(-len * 2, -len);
+        if (recent.join('') === previous.join('')) {
+          return { exists: true, length: len, pattern: recent };
+        }
+      }
+      return { exists: false };
+    }
 
-    DOM.currentPeriodDisplay.innerText = nextPeriodFull;
-    DOM.currentPredictionDisplay.innerText = `${aiDecision.prediction} (${aiDecision.betLevel})`;
-    DOM.confidenceDisplay.innerText = `${aiDecision.confidence}%`;
-    DOM.overallConfidenceDisplay.innerText = `${aiDecision.confidence}%`;
+    // New: Detect alternating patterns (e.g., Big-Small-Big-Small)
+    function detectAlternatingPattern(results) {
+      if (results.length < 4) return { exists: false, type: null };
+      const types = results.slice(-4.5).map(n => n >= 5 ? "Big" : "Small");
+      if (types[0] === types[2] && types[1] === types[3] && types[0] !== types[1]) {
+        return { exists: true, next: types[1] }; // Predict the next in alternating sequence
+      }
+      return { exists: false };
+    }
 
-    historyData.unshift({
-      period: nextPeriod,
-      prediction: aiDecision.prediction,
-      betLevel: aiDecision.betLevel,
-      result: "-",
-      resultStatus: "Pending",
-      calculation: "-",
-      decisionFactor: aiDecision.decisionFactor
-    });
-    saveHistory();
-    updateHistory();
-    updateStats();
-    lastFetchedPeriod = result.issueNumber;
-    lastPeriodUpdate = currentMinute;
-  } else {
-    console.log("No period change, refreshing UI");
-    updateHistory();
-    updateStats();
-  }
-};
+    // New: Calculate moving average for trend prediction
+    function calculateMovingAverage(results, windowSize) {
+      if (results.length < windowSize) return null;
+      const slice = results.slice(-windowSize);
+      return slice.reduce((a, b) => a + b, 0) / windowSize;
+    }
 
-const updateTimer = () => {
-  DOM.timerDisplay.innerText = formatTimer();
-  requestAnimationFrame(updateTimer);
-};
+    function getPrediction() {
+      let prediction;
+      if (pastResults.length >= 5) {
+        // Frequency analysis
+        let freq = Array(10).fill(0);
+        pastResults.slice(-20).forEach(n => freq[n]++);
+        const minFreq = Math.min(...freq.filter(f => f > 0)) || 1;
+        const rare = freq.map((f, i) => f === minFreq ? i : null).filter(i => i !== null);
 
-const updateStats = () => {
-  DOM.totalWins.innerText = stats.wins || 0;
-  DOM.totalLosses.innerText = stats.losses || 0;
-  console.log("Stats updated:", stats);
-};
+        // Trend analysis with moving average
+        const last = pastResults[pastResults.length - 1];
+        const secondLast = pastResults[pastResults.length - 2] || 0;
+        const movingAvg = calculateMovingAverage(pastResults, 5) || 5;
+        const trend = Math.round((last + (last - secondLast) + movingAvg) / 2) % 10;
 
-const updateHistory = () => {
-  if (!DOM.historyContainer) {
-    console.error("History container not found");
-    showToast("Error: History container not found.", "error");
-    return;
-  }
-  console.log("Updating history with data:", historyData);
-  if (historyData.length === 0) {
-    DOM.historyContainer.innerHTML = '<div class="no-results">No results available yet.</div>';
-    return;
-  }
-  try {
-    DOM.historyContainer.innerHTML = historyData.map((item, index) => {
-      let borderColor = item.resultStatus === "WIN" ? "border-l-4 border-green-400" :
-                       item.resultStatus === "LOSS" ? "border-l-4 border-red-400" :
-                       "border-l-4 border-yellow-400";
-      let iconClass = item.resultStatus === "WIN" ? "fa-check-circle win-animation text-green-400" :
-                     item.resultStatus === "LOSS" ? "fa-xmark-circle loss-animation text-red-400" :
-                     "fa-spinner spinner text-yellow-400";
-      return `
-        <div class="history-item ripple grid grid-cols-3 gap-2 p-3 ${borderColor}" role="listitem">
-          <div class="col-span-2 space-y-1">
-            <div class="text-cyan-200 text-sm"><i class="fa fa-calendar mr-1 text-magenta-400"></i><strong>Period: ${item.period}</strong></div>
-            <div class="text-cyan-200 text-sm"><i class="fa fa-chart-bar mr-1 text-magenta-400"></i>Predict: ${item.prediction} (${item.betLevel})</div>
-            <div class="text-cyan-200 text-sm"><i class="fa fa-calculator mr-1 text-magenta-400"></i>Result: ${item.calculation}</div>
-            <div class="text-cyan-200 text-sm"><i class="fa fa-trophy mr-1 text-magenta-400"></i>Status: ${item.resultStatus}</div>
-          </div>
-          <div class="flex items-center justify-end">
-            <i class="fa-solid ${iconClass} text-lg"></i>
-            <button onclick="deleteHistoryItem(${index})" class="ml-2 text-red-600 hover:text-red-800" title="Delete">
-              <i class="fa-solid fa-trash"></i>
-            </button>
-          </div>
-        </div>
-      `;
-    }).join('');
-  } catch (e) {
-    console.error("Error updating history:", e);
-    showToast("Error updating history display.", "error");
-    DOM.historyContainer.innerHTML = '<div class="no-results">Error displaying history.</div>';
-  }
-};
+        // Pattern detection
+        const lastFive = pastResults.slice(-5).join('');
+        const isPatternRepeating = pastResults.slice(-10, -5).join('') === lastFive;
+        const cyclicPattern = detectCyclicPattern(pastResults);
+        const streak = detectStreaks(pastResults);
+        const alternating = detectAlternatingPattern(pastResults);
+        const variance = calculateVariance(pastResults.slice(-20));
+        const stdDev = calculateStdDev(pastResults.slice(-20));
 
-const refreshPrediction = async () => {
-  showToast("Refreshing prediction...", "info");
-  await updatePrediction();
-};
+        // New: Entropy calculation for randomness assessment
+        const entropy = -freq
+          .map(f => f / 20)
+          .filter(p => p > 0)
+          .reduce((sum, p) => sum - p * Math.log2(p), 0);
 
-const clearHistory = () => {
-  historyData = [];
-  stats.wins = 0;
-  stats.losses = 0;
-  saveHistory();
-  localStorage.setItem('spyPredictorStats', JSON.stringify(stats));
-  updateHistory();
-  updateStats();
-  showToast("History cleared.", "success");
-};
+        // Adaptive weights with additional factors
+        const weights = freq.map((f, i) => {
+          const recencyFactor = pastResults.slice(-10).includes(i) ? 1.8 : 1;
+          const varianceFactor = variance > 8 ? 0.7 : 1.3;
+          const entropyFactor = entropy > 3 ? 1.2 : 0.8; // Higher entropy = more randomness
+          const streakFactor = streak.length >= 3 ? 0.9 : 1.1;
+          return (1 / (f + 1)) * recencyFactor * varianceFactor * entropyFactor * streakFactor;
+        });
+        const totalWeight = weights.reduce((a, b) => a + b, 0);
+        const probabilities = weights.map(w => w / totalWeight);
 
-const deleteHistoryItem = (index) => {
-  if (index < 0 || index >= historyData.length) {
-    showToast("Error: Invalid history item.", "error");
-    return;
-  }
-  const item = historyData[index];
-  if (item.resultStatus === "WIN") stats.wins--;
-  else if (item.resultStatus === "LOSS") stats.losses--;
-  historyData.splice(index, 1);
-  saveHistory();
-  localStorage.setItem('spyPredictorStats', JSON.stringify(stats));
-  updateHistory();
-  updateStats();
-  showToast("History item deleted.", "success");
-};
+        // Decision logic with enhanced randomization
+        const randomFactor = Math.random();
+        if (cyclicPattern.exists && randomFactor > 0.2) {
+          prediction = cyclicPattern.pattern[0];
+        } else if (alternating.exists && randomFactor > 0.25) {
+          prediction = alternating.next === "Big" ? Math.floor(Math.random() * 5) + 5 : Math.floor(Math.random() * 5);
+        } else if (streak.length >= 4 && randomFactor > 0.4) {
+          prediction = streak.type === "Big" ? Math.floor(Math.random() * 5) : Math.floor(Math.random() * 5) + 5;
+        } else if (isPatternRepeating && randomFactor > 0.3) {
+          prediction = pastResults[pastResults.length - 5];
+        } else if (rare.includes(trend) && randomFactor > 0.25) {
+          prediction = trend;
+        } else if (stdDev > 2.5 && randomFactor > 0.15) {
+          // Introduce randomness when high standard deviation
+          prediction = Math.floor(Math.random() * 10);
+        } else {
+          let rand = Math.random();
+          let cumulative = 0;
+          for (let i = 0; i < 10; i++) {
+            cumulative += probabilities[i];
+            if (rand < cumulative) {
+              prediction = i;
+              break;
+            }
+          }
+        }
+      } else {
+        prediction = Math.floor(Math.random() * 10);
+      }
+      pastResults.push(prediction);
+      if (pastResults.length > 100) pastResults.shift();
+      return prediction;
+    }
 
-// Initialize
-const init = () => {
-  console.log("Initializing application at", new Date().toISOString());
-  // Clear history and stats on login
-  clearHistory();
-  updateTimer();
-  setInterval(updatePrediction, UPDATE_INTERVAL);
-  updateHistory();
-  updateStats();
-  updatePrediction();
-};
+    function getBigSmallPrediction(prediction) {
+      const isBig = prediction >= 5;
+      const recent = pastResults.slice(-10);
+      const bigCount = recent.filter(n => n >= 5).length;
+      const smallCount = recent.length - bigCount;
+      const bigProbability = recent.length > 0 ? bigCount / recent.length : 0.5;
+      const lastThree = pastResults.slice(-3).map(n => n >= 5 ? "Big" : "Small");
+      const isAlternating = lastThree.length >= 3 && lastThree[0] !== lastThree[1] && lastThree[1] !== lastThree[2];
+      const streak = detectStreaks(pastResults);
+      const alternating = detectAlternatingPattern(pastResults);
 
-init();   
-      </script>
+      // Confidence interval for Big/Small
+      const n = recent.length;
+      const p = bigProbability;
+      const z = 1.96; // 95% confidence
+      const ci = z * Math.sqrt((p * (1 - p)) / n);
+      const bigCiLower = p - ci;
+      const bigCiUpper = p + ci;
+
+      const randomFactor = Math.random();
+      if (streak.length >= 5 && randomFactor > 0.6) {
+        return streak.type === "Big" ? "Small" : "Big";
+      } else if (alternating.exists && randomFactor > 0.3) {
+        return alternating.next;
+      } else if (isAlternating && randomFactor > 0.35) {
+        return lastThree[2] === "Big" ? "Small" : "Big";
+      } else if (bigCiUpper >= 0.8 && isBig) {
+        return "Big";
+      } else if (bigCiLower <= 0.2 && !isBig) {
+        return "Small";
+      } else {
+        const adjustedProb = (bigProbability + 0.5) / 2;
+        return Math.random() > adjustedProb ? (isBig ? "Big" : "Small") : (isBig ? "Small" : "Big");
+      }
+    }
+
+    function fetchResult() {
+      return Math.floor(Math.random() * 10); // Placeholder; replace with actual API if available
+    }
+
+    function verifyPrediction(predictedNumber, predictedBigSmall, actualResult) {
+      const actualBigSmall = actualResult >= 5 ? "Big" : "Small";
+      const isNumberCorrect = predictedNumber === actualResult;
+      const isBigSmallCorrect = predictedBigSmall === actualBigSmall;
+      return { isNumberCorrect, isBigSmallCorrect };
+    }
+
+    function calculateAccuracy() {
+      if (predictionHistory.length === 0) return 0;
+      const correctCount = predictionHistory.filter(h => h.isNumberCorrect || h.isBigSmallCorrect).length;
+      return Math.round((correctCount / predictionHistory.length) * 100);
+    }
+
+    function updateTimer() {
+      const now = new Date().toLocaleString('en-US', { timeZone: 'UTC' });
+      const calendar = new Date(now);
+      const seconds = calendar.getSeconds();
+      const remainingSeconds = 60 - seconds;
+      let formattedTime = `00:${remainingSeconds.toString().padStart(2, '0')}`;
+      document.getElementById("timer").textContent = `Timer: ${formattedTime}`;
+    }
+
+    function updateDisplay() {
+      const now = new Date().toLocaleString('en-US', { timeZone: 'UTC' });
+      const calendar = new Date(now);
+      const seconds = calendar.getSeconds();
+      const minutes = calendar.getMinutes();
+      const totalMinutes = calendar.getHours() * 60 + minutes;
+      const period = new Date(now).toLocaleDateString('en-CA').replace(/-/g, '') + '1000' + (10001 + totalMinutes);
+
+      if (minutes !== lastPredictedMinute || lastPredictedMinute === -1) {
+        const prediction = getPrediction();
+        const bigSmall = getBigSmallPrediction(prediction);
+        const actualResult = fetchResult();
+        const { isNumberCorrect, isBigSmallCorrect } = verifyPrediction(prediction, bigSmall, actualResult);
+        lastPredictedMinute = minutes;
+        lastBigSmall = bigSmall;
+
+        predictionHistory.push({ prediction, bigSmall, actualResult, isNumberCorrect, isBigSmallCorrect });
+        if (predictionHistory.length > 100) predictionHistory.shift();
+
+        const item = `[${period}] → ${prediction} (${bigSmall})`;
+        updateUI(item);
+      }
+    }
+
+    function updateUI(item) {
+      const latestCard = document.getElementById("latest");
+      latestCard.className = `prediction-card`;
+      document.getElementById("latestItem").textContent = item;
+      document.getElementById("accuracy").textContent = `Accuracy: ${calculateAccuracy()}%`;
+    }
+
+    // Drag and Drop
+    const box = document.getElementById("floatingBox");
+    let offsetX = 0, offsetY = 0, isDragging = false;
+
+    box.addEventListener("mousedown", startDrag);
+    box.addEventListener("touchstart", startDrag);
+
+    function startDrag(e) {
+      isDragging = true;
+      const touch = e.touches ? e.touches[0] : e;
+      offsetX = touch.clientX - box.offsetLeft;
+      offsetY = touch.clientY - box.offsetTop;
+      box.style.transition = "none";
+      e.preventDefault();
+    }
+
+    document.addEventListener("mousemove", drag);
+    document.addEventListener("touchmove", drag);
+
+    function drag(e) {
+      if (!isDragging) return;
+      const touch = e.touches ? e.touches[0] : e;
+      let x = touch.clientX - offsetX;
+      let y = touch.clientY - offsetY;
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const rect = box.getBoundingClientRect();
+
+      x = Math.max(0, Math.min(x, vw - rect.width));
+      y = Math.max(0, Math.min(y, vh - rect.height));
+
+      box.style.left = `${x}px`;
+      box.style.top = `${y}px`;
+      box.style.right = "auto";
+      box.style.bottom = "auto";
+      box.style.transform = "none";
+    }
+
+    document.addEventListener("mouseup", stopDrag);
+    document.addEventListener("touchend", stopDrag);
+
+    function stopDrag() {
+      if (!isDragging) return;
+      isDragging = false;
+      box.style.transition = "all 0.3s ease";
+    }
+
+    // Run updateDisplay and updateTimer every second
+    setInterval(() => {
+      updateDisplay();
+      updateTimer();
+    }, 1000);
+
+    // Trigger initial prediction immediately
+    updateDisplay();
+  </script>
 </body>
 </html>
