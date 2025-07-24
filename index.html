@@ -142,7 +142,7 @@
 <body>
   <div class="container">
     <div class="wrapper">
-      <svg><text x="50%" y="50%" dy=".15em" text-anchor="middle">ALPHA PREDICTOR </text></svg>
+      <svg><text x="50%" y="50%" dy=".15em" text-anchor="middle">ALPHA PREDICTOR</text></svg>
     </div>
 
     <div class="card">
@@ -160,10 +160,10 @@
       <div class="info-row"><span><i class="fa-solid fa-percent"></i> Win Rate</span><span id="accuracy">0%</span></div>
       <div class="info-row"><span><i class="fa-solid fa-trophy"></i> Wins</span><span id="wins">0</span></div>
       <div class="info-row"><span><i class="fa-solid fa-skull-crossbones"></i> Losses</span><span id="losses">0</span></div>
-      <div class="info-row"><span><i class="fa-solid fa-server"></i> Server Status</span><span class="connected">Connected</span></div>
+      <div class="info-row"><span><i class="fa-solid fa-server"></i> Server Status</span><span id="serverStatus">Connected</span></div>
     </div>
 
-     <div class="history-title">History</div>
+    <div class="history-title">History</div>
     <div id="historyContainer"></div>
 
     <!-- WIN sound -->
@@ -187,10 +187,10 @@
   }
 
   function ultraAIPredict(history) {
-    if (history.length < 5) return { prediction: Math.random() >= 5 ? "BIG" : "SMALL" };
+    if (history.length < 5) return { prediction: Math.random() >= 0.5 ? "BIG" : "SMALL" };
     let recentResults = history.filter(h => h.result !== "-").slice(0, 5);
     let bigCount = 0, smallCount = 0, weight = 1;
-    for (let i = recentResults.length - 5; i >= 0; i--) {
+    for (let i = recentResults.length - 1; i >= 0; i--) {
       let result = recentResults[i];
       if (result.result >= 5) bigCount += weight;
       else smallCount += weight;
@@ -205,27 +205,46 @@
     lastStatus = match ? 'WIN' : 'LOSS';
 
     if (lastStatus === 'WIN') {
-      document.getElementById("winSound").play();
+      const winSound = document.getElementById("winSound");
+      winSound.play().catch(e => console.log("Audio playback failed:", e));
       alert("🎉 You WON this round!");
     }
   }
 
   async function fetchGameResult() {
     try {
-      let response = await fetch("Https://kbtpredictor.shop/API/1_min.php/api/webapi/GetNoaverageEmerdList", {
+      // Mock API response for testing
+      const mockData = {
+        data: {
+          list: [{
+            issueNumber: (lastFetchedPeriod ? parseInt(lastFetchedPeriod) + 1 : 1000).toString(),
+            number: Math.floor(Math.random() * 10).toString()
+          }]
+        }
+      };
+      // Uncomment the following to use the real API when available
+      /*
+      let response = await fetch("https://kbtpredictor.shop/API/1_min.php/api/webapi/GetNoaverageEmerdList", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          pageSize: 1440, pageNo: 1440, typeId: 1440, language: 0,
+          pageSize: 1440,
+          pageNo: 1,
+          typeId: 1,
+          language: 0,
           random: "A1B2C3D4E5F6G7H8I9J10K11L12M13N14O15P16Q17R18S19T20U21V22W23X24Y25X",
           signature: "A1B2C3D4E5F6G7H8I9J10K11L12M13N14O15P16Q17R18S19T20U21V22W23X24Y25X",
-          timestamp: Math.floor(Date.now() / 99)
+          timestamp: Math.floor(Date.now() / 1000)
         })
       });
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       let data = await response.json();
       return data?.data?.list?.[0] || null;
+      */
+      return mockData.data.list[0];
     } catch (e) {
-      console.error("API Error", e);
+      console.error("API Error:", e);
+      document.getElementById("serverStatus").textContent = "Disconnected";
       return null;
     }
   }
@@ -233,6 +252,8 @@
   async function updatePrediction() {
     let result = await fetchGameResult();
     if (!result || result.issueNumber === lastFetchedPeriod) return;
+
+    document.getElementById("serverStatus").textContent = "Connected";
 
     if (historyData.length > 0 && historyData[0].resultStatus === "Pending") {
       const actualNumber = Number(result.number);
@@ -246,7 +267,13 @@
     lastOppositeNumber = getOppositeNumber(lastPrediction);
     globalPrediction = lastPrediction;
 
-    let nextPeriodFull = (BigInt(result.issueNumber) + 1n).toString();
+    let nextPeriodFull;
+    try {
+      nextPeriodFull = (BigInt(result.issueNumber) + 1n).toString();
+    } catch (e) {
+      console.error("Error parsing issueNumber:", e);
+      nextPeriodFull = (parseInt(result.issueNumber) + 1).toString();
+    }
     let nextPeriod = nextPeriodFull.slice(-4);
 
     document.getElementById("periodDisplay").value = nextPeriod;
@@ -303,6 +330,8 @@
     document.getElementById("accuracy").textContent = `${accuracy}%`;
   }
 
+  // Initial call and set interval
+  updatePrediction();
   setInterval(updatePrediction, 5000);
 </script>
 </body>
