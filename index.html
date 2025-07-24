@@ -3,139 +3,193 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SILENT X KILLER 🔞</title>
+  <title>Alpha Predictor 🔞</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --primary-bg: #1a1a1a;
+      --card-bg: #2a2a2a;
+      --text-primary: #e0e0e0;
+      --accent-green: #4caf50;
+      --accent-red: #ef5350;
+      --accent-yellow: #fbc02d;
+    }
+
     * {
       box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Roboto', sans-serif;
       margin: 0;
       padding: 0;
     }
+
     body {
-      background: #000;
-      color: #00ff00;
-      padding: 20px;
+      background: var(--primary-bg);
+      color: var(--text-primary);
+      padding: 16px;
     }
+
     .container {
-      max-width: 500px;
+      max-width: 600px;
       margin: auto;
     }
+
     .wrapper svg {
       width: 100%;
       height: 80px;
       fill: none;
     }
+
     .wrapper text {
-      font-size: 32px;
-      font-family: 'Orbitron', sans-serif;
-      fill: #00ff00;
-      stroke: #00ff00;
+      font-size: 36px;
+      font-weight: 700;
+      fill: var(--accent-green);
+      stroke: var(--accent-green);
       stroke-width: 1px;
     }
+
     .card {
-      background: #0a0a0a;
-      border-radius: 12px;
-      padding: 20px;
-      margin: 20px 0;
-      box-shadow: 0 0 15px #00ff00;
+      background: linear-gradient(145deg, #2a2a2a, #222);
+      border-radius: 16px;
+      padding: 24px;
+      margin: 24px 0;
+      box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+      transition: transform 0.3s ease;
     }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
     .period-label {
-      font-weight: bold;
-      margin-bottom: 5px;
+      font-weight: 500;
+      margin-bottom: 8px;
       display: flex;
       align-items: center;
-      color: #00ff00;
+      color: var(--accent-green);
     }
+
     .period-label i {
       margin-right: 8px;
     }
+
     .period-input {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       font-size: 16px;
-      background: #1a1a1a;
-      color: #00ff00;
-      border: 1px solid #00ff00;
+      background: #333;
+      color: var(--text-primary);
+      border: 1px solid var(--accent-green);
       border-radius: 8px;
-      margin-bottom: 15px;
+      margin-bottom: 16px;
     }
+
     .result-section {
       text-align: center;
     }
+
     .big-text {
-      font-size: 36px;
-      font-weight: bold;
-      color: #00ff00;
-      margin: 5px 0;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--accent-green);
+      margin: 8px 0;
     }
+
     .opposite-number {
-      font-size: 18px;
-      color: #00ff99;
+      font-size: 1.1rem;
+      color: #81c784;
     }
-    .dashboard-title {
-      font-size: 20px;
-      font-weight: bold;
-      margin-bottom: 15px;
-      color: #00ff00;
+
+    .dashboard-title, .history-title {
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin-bottom: 16px;
+      color: var(--accent-green);
     }
+
     .info-row {
       display: flex;
       justify-content: space-between;
-      padding: 5px 0;
-      border-bottom: 1px solid #00ff00;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--accent-green);
     }
+
     .info-row:last-child {
       border-bottom: none;
     }
+
     .footer {
       text-align: center;
-      margin-top: 20px;
-      font-size: 14px;
-      color: #00ff00;
+      margin-top: 24px;
+      font-size: 0.9rem;
+      color: var(--text-primary);
     }
+
     .history-title {
-      font-size: 20px;
-      font-weight: bold;
-      margin-top: 30px;
       text-align: center;
-      color: #00ff00;
     }
+
     #historyContainer {
-      margin-top: 10px;
+      margin-top: 16px;
     }
+
     .history-card {
-      background: #111;
-      border-left: 5px solid;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 10px;
+      background: var(--card-bg);
+      border-left: 4px solid;
+      padding: 12px;
+      margin-bottom: 12px;
+      border-radius: 8px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      transition: opacity 0.3s ease;
     }
-    .green { border-color: #00ff00; }
-    .red { border-color: #ff4d4d; }
-    .yellow { border-color: #f0c929; }
-    .history-actions i {
-      margin-left: 10px;
+
+    .history-card.new {
+      animation: slideIn 0.5s ease;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .green { border-color: var(--accent-green); }
+    .red { border-color: var(--accent-red); }
+    .yellow { border-color: var(--accent-yellow); }
+
+    .history-actions i, .history-actions button {
+      margin-left: 12px;
       cursor: pointer;
+      background: none;
+      border: none;
+      color: var(--text-primary);
     }
-    .win-icon { color: #00ff00; }
-    .loss-icon { color: #ff4d4d; }
+
+    .win-icon { color: var(--accent-green); }
+    .loss-icon { color: var(--accent-red); }
     .spinner {
-      color: #f0c929;
+      color: var(--accent-yellow);
       animation: spin 1s linear infinite;
     }
+
     @keyframes spin {
       from { transform: rotate(0deg); }
       to { transform: rotate(360deg); }
     }
+
+    #loadingSpinner {
+      color: var(--accent-yellow);
+      margin-top: 8px;
+    }
+
     @media screen and (max-width: 500px) {
-      .result-section { font-size: 14px; }
-      .big-text { font-size: 28px; }
-      .dashboard-title, .history-title { font-size: 18px; }
+      .container { padding: 12px; }
+      .wrapper text { font-size: 28px; }
+      .card { padding: 16px; }
+      .big-text { font-size: 1.5rem; }
+      .period-label, .dashboard-title, .history-title { font-size: 1.1rem; }
+      .history-card { padding: 10px; }
     }
   </style>
 </head>
@@ -152,6 +206,9 @@
         <span><i class="fa-solid fa-chart-bar"></i> Prediction</span>
         <span class="big-text" id="predictionDisplay">-</span>
         <span class="opposite-number" id="oppositeNumberDisplay">-</span>
+        <div id="loadingSpinner" style="display: none;">
+          <i class="fa-solid fa-spinner spinner"></i> Loading...
+        </div>
       </div>
     </div>
 
@@ -160,179 +217,174 @@
       <div class="info-row"><span><i class="fa-solid fa-percent"></i> Win Rate</span><span id="accuracy">0%</span></div>
       <div class="info-row"><span><i class="fa-solid fa-trophy"></i> Wins</span><span id="wins">0</span></div>
       <div class="info-row"><span><i class="fa-solid fa-skull-crossbones"></i> Losses</span><span id="losses">0</span></div>
-      <div class="info-row"><span><i class="fa-solid fa-server"></i> Server Status</span><span id="serverStatus">Connected</span></div>
+      <div class="info-row"><span><i class="fa-solid fa-server"></i> Server Status</span><span class="connected">Connected</span></div>
     </div>
 
     <div class="history-title">History</div>
     <div id="historyContainer"></div>
 
-    <!-- WIN sound -->
     <audio id="winSound" src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_c09f0033d3.mp3?filename=success-1-6297.mp3"></audio>
   </div>
 
-<script>
-  let historyData = [];
-  let lastFetchedPeriod = null;
-  let lastResult = null;
-  let lastPrediction = null;
-  let lastStatus = null;
-  let lastOppositeNumber = null;
-  let globalPrediction = null;
+  <script>
+    let historyData = [];
+    let lastFetchedPeriod = null;
+    let lastResult = null;
+    let lastPrediction = null;
+    let lastStatus = null;
+    let lastOppositeNumber = null;
+    let globalPrediction = null;
 
-  function getOppositeNumber(prediction) {
-    const small = [9, 7, 5, 6, 8];
-    const big = [3, 4, 0, 1, 2];
-    let arr = prediction === "BIG" ? small : big;
-    return arr[Math.floor(Math.random() * arr.length)];
-  }
-
-  function ultraAIPredict(history) {
-    if (history.length < 5) return { prediction: Math.random() >= 0.5 ? "BIG" : "SMALL" };
-    let recentResults = history.filter(h => h.result !== "-").slice(0, 5);
-    let bigCount = 0, smallCount = 0, weight = 1;
-    for (let i = recentResults.length - 1; i >= 0; i--) {
-      let result = recentResults[i];
-      if (result.result >= 5) bigCount += weight;
-      else smallCount += weight;
-      weight *= 1.1;
+    function getOppositeNumber(prediction) {
+      const small = [9, 7, 5, 6, 8];
+      const big = [3, 4, 0, 1, 2];
+      let arr = prediction === "BIG" ? small : big;
+      return arr[Math.floor(Math.random() * arr.length)];
     }
-    return { prediction: bigCount > smallCount ? "BIG" : "SMALL" };
-  }
 
-  function updateLastStatus(actualNumber) {
-    const match = actualNumber == lastOppositeNumber || (actualNumber >= 5 ? 'BIG' : 'SMALL') === lastPrediction;
-    lastResult = actualNumber >= 5 ? 'BIG' : 'SMALL';
-    lastStatus = match ? 'WIN' : 'LOSS';
+    function ultraAIPredict(history) {
+      if (history.length < 5) return { prediction: Math.random() >= 0.5 ? "BIG" : "SMALL" };
+      let recentResults = history.filter(h => h.result !== "-").slice(0, 5);
+      let bigCount = 0, smallCount = 0, weight = 1;
+      for (let i = recentResults.length - 1; i >= 0; i--) {
+        let result = recentResults[i];
+        if (result.result >= 5) bigCount += weight;
+        else smallCount += weight;
+        weight *= 1.1;
+      }
+      return { prediction: bigCount > smallCount ? "BIG" : "SMALL" };
+    }
 
-    if (lastStatus === 'WIN') {
+    function updateLastStatus(actualNumber) {
+      const match = actualNumber == lastOppositeNumber || (actualNumber >= 5 ? 'BIG' : 'SMALL') === lastPrediction;
+      lastResult = actualNumber >= 5 ? 'BIG' : 'SMALL';
+      lastStatus = match ? 'WIN' : 'LOSS';
+      if (lastStatus === 'WIN') {
+        playWinSound();
+        alert("🎉 You WON this round!");
+      }
+    }
+
+    function playWinSound() {
       const winSound = document.getElementById("winSound");
-      winSound.play().catch(e => console.log("Audio playback failed:", e));
-      alert("🎉 You WON this round!");
+      winSound.play().catch(e => console.error("Audio playback failed:", e));
     }
-  }
 
-  async function fetchGameResult() {
-    try {
-      // Mock API response for testing
-      const mockData = {
-        data: {
-          list: [{
-            issueNumber: (lastFetchedPeriod ? parseInt(lastFetchedPeriod) + 1 : 1000).toString(),
-            number: Math.floor(Math.random() * 10).toString()
-          }]
+    async function fetchGameResult() {
+      try {
+        let response = await fetch("https://kbtpredictor.shop/API/1_min.php/api/webapi/GetNoaverageEmerdList", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            pageSize: 1440,
+            pageNo: 1,
+            typeId: 1440,
+            language: 0,
+            random: "A1B2C3D4E5F6G7H8I9J10K11L12M13N14O15P16Q17R18S19T20U21V22W23X24Y25X",
+            signature: "A1B2C3D4E5F6G7H8I9J10K11L12M13N14O15P16Q17R18S19T20U21V22W23X24Y25X",
+            timestamp: Math.floor(Date.now() / 1000)
+          })
+        });
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        let data = await response.json();
+        if (!data?.data?.list?.[0]) throw new Error("No data returned from API");
+        return data.data.list[0];
+      } catch (e) {
+        console.error("API Error:", e.message);
+        document.querySelector(".connected").textContent = "Disconnected";
+        document.querySelector(".connected").style.color = "#ef5350";
+        return null;
+      }
+    }
+
+    async function updatePrediction() {
+      document.getElementById("loadingSpinner").style.display = "block";
+      try {
+        let result = await fetchGameResult();
+        if (!result || !result.issueNumber || result.issueNumber === lastFetchedPeriod) return;
+
+        if (historyData.length > 0 && historyData[0].resultStatus === "Pending") {
+          const actualNumber = Number(result.number);
+          if (!isNaN(actualNumber)) {
+            updateLastStatus(actualNumber);
+            historyData[0].result = actualNumber;
+            historyData[0].resultStatus = lastStatus;
+          }
         }
-      };
-      // Uncomment the following to use the real API when available
-      /*
-      let response = await fetch("https://kbtpredictor.shop/API/1_min.php/api/webapi/GetNoaverageEmerdList", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          pageSize: 1440,
-          pageNo: 1,
-          typeId: 1,
-          language: 0,
-          random: "A1B2C3D4E5F6G7H8I9J10K11L12M13N14O15P16Q17R18S19T20U21V22W23X24Y25X",
-          signature: "A1B2C3D4E5F6G7H8I9J10K11L12M13N14O15P16Q17R18S19T20U21V22W23X24Y25X",
-          timestamp: Math.floor(Date.now() / 1000)
-        })
-      });
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-      let data = await response.json();
-      return data?.data?.list?.[0] || null;
-      */
-      return mockData.data.list[0];
-    } catch (e) {
-      console.error("API Error:", e);
-      document.getElementById("serverStatus").textContent = "Disconnected";
-      return null;
-    }
-  }
 
-  async function updatePrediction() {
-    let result = await fetchGameResult();
-    if (!result || result.issueNumber === lastFetchedPeriod) return;
+        const aiDecision = ultraAIPredict(historyData);
+        lastPrediction = aiDecision.prediction;
+        lastOppositeNumber = getOppositeNumber(lastPrediction);
+        globalPrediction = lastPrediction;
 
-    document.getElementById("serverStatus").textContent = "Connected";
+        let nextPeriodFull = (parseInt(result.issueNumber, 10) + 1).toString();
+        let nextPeriod = nextPeriodFull.slice(-4);
 
-    if (historyData.length > 0 && historyData[0].resultStatus === "Pending") {
-      const actualNumber = Number(result.number);
-      updateLastStatus(actualNumber);
-      historyData[0].result = actualNumber;
-      historyData[0].resultStatus = lastStatus;
+        document.getElementById("periodDisplay").value = nextPeriod;
+        document.getElementById("predictionDisplay").innerText = globalPrediction;
+        document.getElementById("oppositeNumberDisplay").innerText = lastOppositeNumber;
+
+        historyData.unshift({
+          period: nextPeriod,
+          prediction: globalPrediction,
+          oppositeNumber: lastOppositeNumber,
+          result: "-",
+          resultStatus: "Pending"
+        });
+
+        if (historyData.length > 100) historyData.pop();
+
+        updateHistory();
+        updateStats();
+        lastFetchedPeriod = result.issueNumber;
+      } finally {
+        document.getElementById("loadingSpinner").style.display = "none";
+      }
     }
 
-    const aiDecision = ultraAIPredict(historyData);
-    lastPrediction = aiDecision.prediction;
-    lastOppositeNumber = getOppositeNumber(lastPrediction);
-    globalPrediction = lastPrediction;
-
-    let nextPeriodFull;
-    try {
-      nextPeriodFull = (BigInt(result.issueNumber) + 1n).toString();
-    } catch (e) {
-      console.error("Error parsing issueNumber:", e);
-      nextPeriodFull = (parseInt(result.issueNumber) + 1).toString();
+    function deleteHistory(index) {
+      historyData.splice(index, 1);
+      updateHistory();
+      updateStats();
     }
-    let nextPeriod = nextPeriodFull.slice(-4);
 
-    document.getElementById("periodDisplay").value = nextPeriod;
-    document.getElementById("predictionDisplay").innerText = globalPrediction;
-    document.getElementById("oppositeNumberDisplay").innerText = lastOppositeNumber;
+    function updateHistory() {
+      const container = document.getElementById("historyContainer");
+      container.innerHTML = historyData.map((item, index) => {
+        let color = item.resultStatus === "WIN" ? "green" : item.resultStatus === "LOSS" ? "red" : "yellow";
+        let iconClass = item.resultStatus === "WIN" ? "fa-check-circle win-icon" :
+                        item.resultStatus === "LOSS" ? "fa-xmark-circle loss-icon" :
+                        "fa-spinner spinner";
+        return `<div class="history-card ${color} new" role="listitem" aria-label="Prediction for period ${item.period}">
+          <div style="flex: 1;">
+            <div><strong><i class="fa fa-calendar"></i> P-${item.period}</strong></div>
+            <div><i class="fa fa-chart-bar"></i> ${item.prediction} | <i class="fa fa-retweet"></i> ${item.oppositeNumber}</div>
+            <div><i class="fa fa-dice"></i> ${item.result !== "-" ? item.result : "Waiting..."}</div>
+          </div>
+          <div class="history-actions">
+            <i class="fa ${iconClass}" aria-hidden="true"></i>
+            <button class="fa-solid fa-trash-alt" onclick="deleteHistory(${index})" aria-label="Delete history entry for period ${item.period}"></button>
+          </div>
+        </div>`;
+      }).join("");
+      setTimeout(() => {
+        document.querySelectorAll(".history-card.new").forEach(card => card.classList.remove("new"));
+      }, 500);
+    }
 
-    historyData.unshift({
-      period: nextPeriod,
-      prediction: globalPrediction,
-      oppositeNumber: lastOppositeNumber,
-      result: "-",
-      resultStatus: "Pending"
-    });
+    function updateStats() {
+      const wins = historyData.filter(item => item.resultStatus === "WIN").length;
+      const losses = historyData.filter(item => item.resultStatus === "LOSS").length;
+      const total = wins + losses;
+      const accuracy = total > 0 ? ((wins / total) * 100).toFixed(2) : 0;
+      document.getElementById("wins").textContent = wins;
+      document.getElementById("losses").textContent = losses;
+      document.getElementById("accuracy").textContent = `${accuracy}%`;
+    }
 
-    updateHistory();
-    updateStats();
-    lastFetchedPeriod = result.issueNumber;
-  }
-
-  function deleteHistory(index) {
-    historyData.splice(index, 1);
-    updateHistory();
-    updateStats();
-  }
-
-  function updateHistory() {
-    const container = document.getElementById("historyContainer");
-    container.innerHTML = historyData.map((item, index) => {
-      let color = item.resultStatus === "WIN" ? "green" : item.resultStatus === "LOSS" ? "red" : "yellow";
-      let iconClass = item.resultStatus === "WIN" ? "fa-check-circle win-icon" :
-                      item.resultStatus === "LOSS" ? "fa-xmark-circle loss-icon" :
-                      "fa-spinner spinner";
-      return `<div class="history-card ${color}">
-        <div style="flex: 1;">
-          <div><strong><i class="fa fa-calendar"></i> P-${item.period}</strong></div>
-          <div><i class="fa fa-chart-bar"></i> ${item.prediction} | <i class="fa fa-retweet"></i> ${item.oppositeNumber}</div>
-          <div><i class="fa fa-dice"></i> ${item.result !== "-" ? item.result : "Waiting..."}</div>
-        </div>
-        <div class="history-actions">
-          <i class="fa ${iconClass}"></i>
-          <i class="fa-solid fa-trash-alt" onclick="deleteHistory(${index})"></i>
-        </div>
-      </div>`;
-    }).join("");
-  }
-
-  function updateStats() {
-    const wins = historyData.filter(item => item.resultStatus === "WIN").length;
-    const losses = historyData.filter(item => item.resultStatus === "LOSS").length;
-    const total = wins + losses;
-    const accuracy = total > 0 ? ((wins / total) * 100).toFixed(2) : 0;
-    document.getElementById("wins").textContent = wins;
-    document.getElementById("losses").textContent = losses;
-    document.getElementById("accuracy").textContent = `${accuracy}%`;
-  }
-
-  // Initial call and set interval
-  updatePrediction();
-  setInterval(updatePrediction, 5000);
-</script>
+    // Initial call and interval
+    updatePrediction();
+    setInterval(updatePrediction, 5000);
+  </script>
 </body>
 </html>
