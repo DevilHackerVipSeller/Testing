@@ -2,385 +2,308 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nexify Predictor</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SILENT X KILLER 🔞</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    html, body {
+    * {
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
       margin: 0;
       padding: 0;
-      overflow: hidden;
-      font-family: 'Inter', sans-serif;
+    }
+    body {
+      background: #000;
+      color: #00ff00;
+      padding: 20px;
+    }
+    .container {
+      max-width: 500px;
+      margin: auto;
+    }
+    .wrapper svg {
+      width: 100%;
+      height: 80px;
+      fill: none;
+    }
+    .wrapper text {
+      font-size: 32px;
+      font-family: 'Orbitron', sans-serif;
+      fill: #00ff00;
+      stroke: #00ff00;
+      stroke-width: 1px;
+    }
+    .card {
       background: #0a0a0a;
-    }
-    iframe {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      border: none;
-    }
-    .glass {
-      background: rgba(20, 20, 20, 0.75);
-      backdrop-filter: blur(15px);
-      border: 1px solid rgba(34, 197, 94, 0.3);
-      border-radius: 20px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-    }
-    #floatingBox {
-      position: fixed;
-      bottom: 40px;
-      right: 20px;
-      z-index: 999;
-      touch-action: none;
-      transition: all 0.3s ease;
-      width: 310px;
-      padding: 1.0rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    .prediction-card {
-      color: #34d399;
-      background: rgba(34, 197, 94, 0.15);
-      border: 1px solid rgba(34, 197, 94, 0.3);
       border-radius: 12px;
-      padding: 14px;
-      transition: transform 0.2s;
+      padding: 20px;
+      margin: 20px 0;
+      box-shadow: 0 0 15px #00ff00;
+    }
+    .period-label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      color: #00ff00;
+    }
+    .period-label i {
+      margin-right: 8px;
+    }
+    .period-input {
       width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      background: #1a1a1a;
+      color: #00ff00;
+      border: 1px solid #00ff00;
+      border-radius: 8px;
+      margin-bottom: 15px;
     }
-    .prediction-card:hover {
-      transform: scale(1.02);
+    .result-section {
+      text-align: center;
     }
-    .stats {
-      font-size: 0.8rem;
-      color: #34d399;
-      margin-top: 12px;
+    .big-text {
+      font-size: 36px;
+      font-weight: bold;
+      color: #00ff00;
+      margin: 5px 0;
+    }
+    .opposite-number {
+      font-size: 18px;
+      color: #00ff99;
+    }
+    .dashboard-title {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      color: #00ff00;
+    }
+    .info-row {
       display: flex;
       justify-content: space-between;
+      padding: 5px 0;
+      border-bottom: 1px solid #00ff00;
     }
-    #timer, #accuracy {
-      font-size: 0.8rem;
-      color: #34d399;
+    .info-row:last-child {
+      border-bottom: none;
     }
-    #latestItem {
-      font-size: 0.875rem;
-      font-weight: 600;
-    }
-    .title {
-      font-size: 0.99rem;
-      color: #ffffff; /* White color for title */
-      font-weight: 700;
-      margin-bottom: 16px;
+    .footer {
       text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+      color: #00ff00;
+    }
+    .history-title {
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 30px;
+      text-align: center;
+      color: #00ff00;
+    }
+    #historyContainer {
+      margin-top: 10px;
+    }
+    .history-card {
+      background: #111;
+      border-left: 5px solid;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .green { border-color: #00ff00; }
+    .red { border-color: #ff4d4d; }
+    .yellow { border-color: #f0c929; }
+    .history-actions i {
+      margin-left: 10px;
+      cursor: pointer;
+    }
+    .win-icon { color: #00ff00; }
+    .loss-icon { color: #ff4d4d; }
+    .spinner {
+      color: #f0c929;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    @media screen and (max-width: 500px) {
+      .result-section { font-size: 14px; }
+      .big-text { font-size: 28px; }
+      .dashboard-title, .history-title { font-size: 18px; }
     }
   </style>
 </head>
-<body class="bg-black text-white">
-  <!-- 🌐 Background Website -->
-  <iframe src="https://51game5.com/#/"></iframe>
+<body>
+  <div class="container">
+    <div class="wrapper">
+      <svg><text x="50%" y="50%" dy=".15em" text-anchor="middle">SILENT X KILLER </text></svg>
+    </div>
 
-  <!-- 🪟 Floating Window -->
-  <div id="floatingBox" class="glass">
-    <!-- 🎯 Title -->
-    <div class="title">𝐓𝐇𝐄 𝐒𝐏𝐘 𝐏𝐑𝐄𝐃𝐈𝐂𝐓𝐎𝐑 V2.0</div>
-    <!-- 🟪 Latest Prediction -->
-    <div id="latest" class="prediction-card">
-      <div id="latestItem" class="font-semibold">Loading...</div>
-      <div class="stats">
-        <div id="timer">Timer: 00 : 60</div>|<div id="accuracy">Accuracy: --%</div> 
+    <div class="card">
+      <div class="period-label"><i class="fa-solid fa-calendar-days"></i> Period</div>
+      <input type="text" id="periodDisplay" class="period-input" value="-" readonly />
+      <div class="result-section">
+        <span><i class="fa-solid fa-chart-bar"></i> Prediction</span>
+        <span class="big-text" id="predictionDisplay">-</span>
+        <span class="opposite-number" id="oppositeNumberDisplay">-</span>
       </div>
     </div>
+
+    <div class="card">
+      <div class="dashboard-title">Analysis Dashboard</div>
+      <div class="info-row"><span><i class="fa-solid fa-percent"></i> Win Rate</span><span id="accuracy">0%</span></div>
+      <div class="info-row"><span><i class="fa-solid fa-trophy"></i> Wins</span><span id="wins">0</span></div>
+      <div class="info-row"><span><i class="fa-solid fa-skull-crossbones"></i> Losses</span><span id="losses">0</span></div>
+      <div class="info-row"><span><i class="fa-solid fa-server"></i> Server Status</span><span class="connected">Connected</span></div>
+    </div>
+
+     <div class="history-title">History</div>
+    <div id="historyContainer"></div>
+
+    <!-- WIN sound -->
+    <audio id="winSound" src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_c09f0033d3.mp3?filename=success-1-6297.mp3"></audio>
   </div>
 
-  <!-- 🔮 Script Logic -->
-  <script>
-    let pastResults = [];
-    let lastPredictedMinute = -1;
-    let lastBigSmall = '';
-    let predictionHistory = [];
+<script>
+  let historyData = [];
+  let lastFetchedPeriod = null;
+  let lastResult = null;
+  let lastPrediction = null;
+  let lastStatus = null;
+  let lastOppositeNumber = null;
+  let globalPrediction = null;
 
-    // Helper function to calculate variance of past results
-    function calculateVariance(numbers) {
-      if (numbers.length === 0) return 0;
-      const mean = numbers.reduce((a, b) => a + b, 0) / numbers.length;
-      return numbers.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / numbers.length;
+  function getOppositeNumber(prediction) {
+    const small = [9, 7, 5, 6, 8];
+    const big = [3, 4, 0, 1, 2];
+    let arr = prediction === "BIG" ? small : big;
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  function ultraAIPredict(history) {
+    if (history.length < 5) return { prediction: Math.random() >= 5 ? "BIG" : "SMALL" };
+    let recentResults = history.filter(h => h.result !== "-").slice(0, 5);
+    let bigCount = 0, smallCount = 0, weight = 1;
+    for (let i = recentResults.length - 5; i >= 0; i--) {
+      let result = recentResults[i];
+      if (result.result >= 5) bigCount += weight;
+      else smallCount += weight;
+      weight *= 1.1;
+    }
+    return { prediction: bigCount > smallCount ? "BIG" : "SMALL" };
+  }
+
+  function updateLastStatus(actualNumber) {
+    const match = actualNumber == lastOppositeNumber || (actualNumber >= 5 ? 'BIG' : 'SMALL') === lastPrediction;
+    lastResult = actualNumber >= 5 ? 'BIG' : 'SMALL';
+    lastStatus = match ? 'WIN' : 'LOSS';
+
+    if (lastStatus === 'WIN') {
+      document.getElementById("winSound").play();
+      alert("🎉 You WON this round!");
+    }
+  }
+
+  async function fetchGameResult() {
+    try {
+      let response = await fetch("Https://kbtpredictor.shop/API/1_min.php/api/webapi/GetNoaverageEmerdList", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          pageSize: 1440, pageNo: 1440, typeId: 1440, language: 0,
+          random: "A1B2C3D4E5F6G7H8I9J10K11L12M13N14O15P16Q17R18S19T20U21V22W23X24Y25X",
+          signature: "A1B2C3D4E5F6G7H8I9J10K11L12M13N14O15P16Q17R18S19T20U21V22W23X24Y25X",
+          timestamp: Math.floor(Date.now() / 99)
+        })
+      });
+      let data = await response.json();
+      return data?.data?.list?.[0] || null;
+    } catch (e) {
+      console.error("API Error", e);
+      return null;
+    }
+  }
+
+  async function updatePrediction() {
+    let result = await fetchGameResult();
+    if (!result || result.issueNumber === lastFetchedPeriod) return;
+
+    if (historyData.length > 0 && historyData[0].resultStatus === "Pending") {
+      const actualNumber = Number(result.number);
+      updateLastStatus(actualNumber);
+      historyData[0].result = actualNumber;
+      historyData[0].resultStatus = lastStatus;
     }
 
-    // Helper function to calculate standard deviation
-    function calculateStdDev(numbers) {
-      return Math.sqrt(calculateVariance(numbers));
-    }
+    const aiDecision = ultraAIPredict(historyData);
+    lastPrediction = aiDecision.prediction;
+    lastOppositeNumber = getOppositeNumber(lastPrediction);
+    globalPrediction = lastPrediction;
 
-    // Detect streaks (consecutive Big or Small)
-    function detectStreaks(results) {
-      if (results.length < 2) return { type: null, length: 0 };
-      let streakType = results[results.length - 5] >= 5.4 ? "Big" : "Small";
-      let streakLength = 1;
-      for (let i = results.length - 4; i >= 0; i--) {
-        const currentType = results[i] >= 5 ? "Big" : "Small";
-        if (currentType === streakType) streakLength++;
-        else break;
-      }
-      return { type: streakType, length: streakLength };
-    }
+    let nextPeriodFull = (BigInt(result.issueNumber) + 1n).toString();
+    let nextPeriod = nextPeriodFull.slice(-4);
 
-    // Detect cyclic patterns (e.g., repeating sequences)
-    function detectCyclicPattern(results, maxLength = 5) {
-      for (let len = 2; len <= maxLength && len <= results.length / 2; len++) {
-        const recent = results.slice(-len);
-        const previous = results.slice(-len * 2, -len);
-        if (recent.join('') === previous.join('')) {
-          return { exists: true, length: len, pattern: recent };
-        }
-      }
-      return { exists: false };
-    }
+    document.getElementById("periodDisplay").value = nextPeriod;
+    document.getElementById("predictionDisplay").innerText = globalPrediction;
+    document.getElementById("oppositeNumberDisplay").innerText = lastOppositeNumber;
 
-    // New: Detect alternating patterns (e.g., Big-Small-Big-Small)
-    function detectAlternatingPattern(results) {
-      if (results.length < 4) return { exists: false, type: null };
-      const types = results.slice(-4.5).map(n => n >= 5 ? "Big" : "Small");
-      if (types[0] === types[2] && types[1] === types[3] && types[0] !== types[1]) {
-        return { exists: true, next: types[1] }; // Predict the next in alternating sequence
-      }
-      return { exists: false };
-    }
+    historyData.unshift({
+      period: nextPeriod,
+      prediction: globalPrediction,
+      oppositeNumber: lastOppositeNumber,
+      result: "-",
+      resultStatus: "Pending"
+    });
 
-    // New: Calculate moving average for trend prediction
-    function calculateMovingAverage(results, windowSize) {
-      if (results.length < windowSize) return null;
-      const slice = results.slice(-windowSize);
-      return slice.reduce((a, b) => a + b, 0) / windowSize;
-    }
+    updateHistory();
+    updateStats();
+    lastFetchedPeriod = result.issueNumber;
+  }
 
-    function getPrediction() {
-      let prediction;
-      if (pastResults.length >= 5) {
-        // Frequency analysis
-        let freq = Array(10).fill(0);
-        pastResults.slice(-20).forEach(n => freq[n]++);
-        const minFreq = Math.min(...freq.filter(f => f > 0)) || 1;
-        const rare = freq.map((f, i) => f === minFreq ? i : null).filter(i => i !== null);
+  function deleteHistory(index) {
+    historyData.splice(index, 1);
+    updateHistory();
+    updateStats();
+  }
 
-        // Trend analysis with moving average
-        const last = pastResults[pastResults.length - 1];
-        const secondLast = pastResults[pastResults.length - 2] || 0;
-        const movingAvg = calculateMovingAverage(pastResults, 5) || 5;
-        const trend = Math.round((last + (last - secondLast) + movingAvg) / 2) % 10;
+  function updateHistory() {
+    const container = document.getElementById("historyContainer");
+    container.innerHTML = historyData.map((item, index) => {
+      let color = item.resultStatus === "WIN" ? "green" : item.resultStatus === "LOSS" ? "red" : "yellow";
+      let iconClass = item.resultStatus === "WIN" ? "fa-check-circle win-icon" :
+                      item.resultStatus === "LOSS" ? "fa-xmark-circle loss-icon" :
+                      "fa-spinner spinner";
+      return `<div class="history-card ${color}">
+        <div style="flex: 1;">
+          <div><strong><i class="fa fa-calendar"></i> P-${item.period}</strong></div>
+          <div><i class="fa fa-chart-bar"></i> ${item.prediction} | <i class="fa fa-retweet"></i> ${item.oppositeNumber}</div>
+          <div><i class="fa fa-dice"></i> ${item.result !== "-" ? item.result : "Waiting..."}</div>
+        </div>
+        <div class="history-actions">
+          <i class="fa ${iconClass}"></i>
+          <i class="fa-solid fa-trash-alt" onclick="deleteHistory(${index})"></i>
+        </div>
+      </div>`;
+    }).join("");
+  }
 
-        // Pattern detection
-        const lastFive = pastResults.slice(-5).join('');
-        const isPatternRepeating = pastResults.slice(-10, -5).join('') === lastFive;
-        const cyclicPattern = detectCyclicPattern(pastResults);
-        const streak = detectStreaks(pastResults);
-        const alternating = detectAlternatingPattern(pastResults);
-        const variance = calculateVariance(pastResults.slice(-20));
-        const stdDev = calculateStdDev(pastResults.slice(-20));
+  function updateStats() {
+    const wins = historyData.filter(item => item.resultStatus === "WIN").length;
+    const losses = historyData.filter(item => item.resultStatus === "LOSS").length;
+    const total = wins + losses;
+    const accuracy = total > 0 ? ((wins / total) * 100).toFixed(2) : 0;
+    document.getElementById("wins").textContent = wins;
+    document.getElementById("losses").textContent = losses;
+    document.getElementById("accuracy").textContent = `${accuracy}%`;
+  }
 
-        // New: Entropy calculation for randomness assessment
-        const entropy = -freq
-          .map(f => f / 20)
-          .filter(p => p > 0)
-          .reduce((sum, p) => sum - p * Math.log2(p), 0);
-
-        // Adaptive weights with additional factors
-        const weights = freq.map((f, i) => {
-          const recencyFactor = pastResults.slice(-10).includes(i) ? 1.8 : 1;
-          const varianceFactor = variance > 8 ? 0.7 : 1.3;
-          const entropyFactor = entropy > 3 ? 1.2 : 0.8; // Higher entropy = more randomness
-          const streakFactor = streak.length >= 3 ? 0.9 : 1.1;
-          return (1 / (f + 1)) * recencyFactor * varianceFactor * entropyFactor * streakFactor;
-        });
-        const totalWeight = weights.reduce((a, b) => a + b, 0);
-        const probabilities = weights.map(w => w / totalWeight);
-
-        // Decision logic with enhanced randomization
-        const randomFactor = Math.random();
-        if (cyclicPattern.exists && randomFactor > 0.2) {
-          prediction = cyclicPattern.pattern[0];
-        } else if (alternating.exists && randomFactor > 0.25) {
-          prediction = alternating.next === "Big" ? Math.floor(Math.random() * 5) + 5 : Math.floor(Math.random() * 5);
-        } else if (streak.length >= 4 && randomFactor > 0.4) {
-          prediction = streak.type === "Big" ? Math.floor(Math.random() * 5) : Math.floor(Math.random() * 5) + 5;
-        } else if (isPatternRepeating && randomFactor > 0.3) {
-          prediction = pastResults[pastResults.length - 5];
-        } else if (rare.includes(trend) && randomFactor > 0.25) {
-          prediction = trend;
-        } else if (stdDev > 2.5 && randomFactor > 0.15) {
-          // Introduce randomness when high standard deviation
-          prediction = Math.floor(Math.random() * 10);
-        } else {
-          let rand = Math.random();
-          let cumulative = 0;
-          for (let i = 0; i < 10; i++) {
-            cumulative += probabilities[i];
-            if (rand < cumulative) {
-              prediction = i;
-              break;
-            }
-          }
-        }
-      } else {
-        prediction = Math.floor(Math.random() * 10);
-      }
-      pastResults.push(prediction);
-      if (pastResults.length > 100) pastResults.shift();
-      return prediction;
-    }
-
-    function getBigSmallPrediction(prediction) {
-      const isBig = prediction >= 5;
-      const recent = pastResults.slice(-10);
-      const bigCount = recent.filter(n => n >= 5).length;
-      const smallCount = recent.length - bigCount;
-      const bigProbability = recent.length > 0 ? bigCount / recent.length : 0.5;
-      const lastThree = pastResults.slice(-3).map(n => n >= 5 ? "Big" : "Small");
-      const isAlternating = lastThree.length >= 3 && lastThree[0] !== lastThree[1] && lastThree[1] !== lastThree[2];
-      const streak = detectStreaks(pastResults);
-      const alternating = detectAlternatingPattern(pastResults);
-
-      // Confidence interval for Big/Small
-      const n = recent.length;
-      const p = bigProbability;
-      const z = 1.96; // 95% confidence
-      const ci = z * Math.sqrt((p * (1 - p)) / n);
-      const bigCiLower = p - ci;
-      const bigCiUpper = p + ci;
-
-      const randomFactor = Math.random();
-      if (streak.length >= 5 && randomFactor > 0.6) {
-        return streak.type === "Big" ? "Small" : "Big";
-      } else if (alternating.exists && randomFactor > 0.3) {
-        return alternating.next;
-      } else if (isAlternating && randomFactor > 0.35) {
-        return lastThree[2] === "Big" ? "Small" : "Big";
-      } else if (bigCiUpper >= 0.8 && isBig) {
-        return "Big";
-      } else if (bigCiLower <= 0.2 && !isBig) {
-        return "Small";
-      } else {
-        const adjustedProb = (bigProbability + 0.5) / 2;
-        return Math.random() > adjustedProb ? (isBig ? "Big" : "Small") : (isBig ? "Small" : "Big");
-      }
-    }
-
-    function fetchResult() {
-      return Math.floor(Math.random() * 10); // Placeholder; replace with actual API if available
-    }
-
-    function verifyPrediction(predictedNumber, predictedBigSmall, actualResult) {
-      const actualBigSmall = actualResult >= 5 ? "Big" : "Small";
-      const isNumberCorrect = predictedNumber === actualResult;
-      const isBigSmallCorrect = predictedBigSmall === actualBigSmall;
-      return { isNumberCorrect, isBigSmallCorrect };
-    }
-
-    function calculateAccuracy() {
-      if (predictionHistory.length === 0) return 0;
-      const correctCount = predictionHistory.filter(h => h.isNumberCorrect || h.isBigSmallCorrect).length;
-      return Math.round((correctCount / predictionHistory.length) * 100);
-    }
-
-    function updateTimer() {
-      const now = new Date().toLocaleString('en-US', { timeZone: 'UTC' });
-      const calendar = new Date(now);
-      const seconds = calendar.getSeconds();
-      const remainingSeconds = 60 - seconds;
-      let formattedTime = `00:${remainingSeconds.toString().padStart(2, '0')}`;
-      document.getElementById("timer").textContent = `Timer: ${formattedTime}`;
-    }
-
-    function updateDisplay() {
-      const now = new Date().toLocaleString('en-US', { timeZone: 'UTC' });
-      const calendar = new Date(now);
-      const seconds = calendar.getSeconds();
-      const minutes = calendar.getMinutes();
-      const totalMinutes = calendar.getHours() * 60 + minutes;
-      const period = new Date(now).toLocaleDateString('en-CA').replace(/-/g, '') + '1000' + (10001 + totalMinutes);
-
-      if (minutes !== lastPredictedMinute || lastPredictedMinute === -1) {
-        const prediction = getPrediction();
-        const bigSmall = getBigSmallPrediction(prediction);
-        const actualResult = fetchResult();
-        const { isNumberCorrect, isBigSmallCorrect } = verifyPrediction(prediction, bigSmall, actualResult);
-        lastPredictedMinute = minutes;
-        lastBigSmall = bigSmall;
-
-        predictionHistory.push({ prediction, bigSmall, actualResult, isNumberCorrect, isBigSmallCorrect });
-        if (predictionHistory.length > 100) predictionHistory.shift();
-
-        const item = `[${period}] → ${prediction} (${bigSmall})`;
-        updateUI(item);
-      }
-    }
-
-    function updateUI(item) {
-      const latestCard = document.getElementById("latest");
-      latestCard.className = `prediction-card`;
-      document.getElementById("latestItem").textContent = item;
-      document.getElementById("accuracy").textContent = `Accuracy: ${calculateAccuracy()}%`;
-    }
-
-    // Drag and Drop
-    const box = document.getElementById("floatingBox");
-    let offsetX = 0, offsetY = 0, isDragging = false;
-
-    box.addEventListener("mousedown", startDrag);
-    box.addEventListener("touchstart", startDrag);
-
-    function startDrag(e) {
-      isDragging = true;
-      const touch = e.touches ? e.touches[0] : e;
-      offsetX = touch.clientX - box.offsetLeft;
-      offsetY = touch.clientY - box.offsetTop;
-      box.style.transition = "none";
-      e.preventDefault();
-    }
-
-    document.addEventListener("mousemove", drag);
-    document.addEventListener("touchmove", drag);
-
-    function drag(e) {
-      if (!isDragging) return;
-      const touch = e.touches ? e.touches[0] : e;
-      let x = touch.clientX - offsetX;
-      let y = touch.clientY - offsetY;
-      const vw = window.innerWidth;
-      const vh = window.innerHeight;
-      const rect = box.getBoundingClientRect();
-
-      x = Math.max(0, Math.min(x, vw - rect.width));
-      y = Math.max(0, Math.min(y, vh - rect.height));
-
-      box.style.left = `${x}px`;
-      box.style.top = `${y}px`;
-      box.style.right = "auto";
-      box.style.bottom = "auto";
-      box.style.transform = "none";
-    }
-
-    document.addEventListener("mouseup", stopDrag);
-    document.addEventListener("touchend", stopDrag);
-
-    function stopDrag() {
-      if (!isDragging) return;
-      isDragging = false;
-      box.style.transition = "all 0.3s ease";
-    }
-
-    // Run updateDisplay and updateTimer every second
-    setInterval(() => {
-      updateDisplay();
-      updateTimer();
-    }, 1000);
-
-    // Trigger initial prediction immediately
-    updateDisplay();
-  </script>
+  setInterval(updatePrediction, 5000);
+</script>
 </body>
 </html>
