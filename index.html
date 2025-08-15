@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BDG Ultra AI Predictor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: linear-gradient(135deg, #080808, #121212);
+      color: #d8d8d8;
+      margin: 0;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 768px;
+      width: 100%;
+    }
+
+    .header {
+      text-align: center;
+      font-size: 30px;
+      font-weight: 700;
+      color: #00ffcc;
+      margin-bottom: 20px;
+      text-shadow: 0 0 8px rgba(0, 255, 204, 0.6);
+      letter-spacing: 0.8px;
+      animation: glow 1.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 8px rgba(0, 255, 204, 0.6); }
+      to { text-shadow: 0 0 16px rgba(0, 255, 204, 0.8); }
+    }
+
+    .card {
+      background: rgba(24, 24, 24, 0.95);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 20px;
+      text-align: center;
+      box-shadow: 0 4px 16px rgba(0, 255, 204, 0.2);
+      backdrop-filter: blur(8px);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 6px 24px rgba(0, 255, 204, 0.3);
+    }
+
+    #currentPeriod {
+      font-size: 18px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    #liveTime {
+      font-size: 14px;
+      color: #b0b0b0;
+      margin-top: 6px;
+    }
+
+    .prediction-box {
+      background: linear-gradient(135deg, #00ffcc, #00997a);
+      color: #080808;
+      font-size: 20px;
+      font-weight: 600;
+      padding: 14px;
+      border-radius: 10px;
+      margin-top: 14px;
+      box-shadow: 0 0 12px rgba(0, 255, 204, 0.5);
+      animation: pulseGlow 1.8s infinite;
+      position: relative;
+    }
+
+    .confidence {
+      font-size: 12px;
+      margin-top: 8px;
+      color: #ffffff;
+      opacity: 0.8;
+    }
+
+    @keyframes pulseGlow {
+      0% { transform: scale(1); box-shadow: 0 0 12px rgba(0, 255, 204, 0.5); }
+      50% { transform: scale(1.03); box-shadow: 0 0 20px rgba(0, 255, 204, 0.7); }
+      100% { transform: scale(1); box-shadow: 0 0 12px rgba(0, 255, 204, 0.5); }
+    }
+
+    .history-container, .pred-history-container {
+      background: rgba(24, 24, 24, 0.95);
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: 0 4px 16px rgba(0, 255, 204, 0.2);
+      backdrop-filter: blur(8px);
+      transition: box-shadow 0.4s ease;
+      margin-bottom: 20px;
+    }
+
+    .history-container:hover, .pred-history-container:hover {
+      box-shadow: 0 6px 24px rgba(0, 255, 204, 0.3);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 0;
+    }
+
+    th, td {
+      padding: 12px;
+      font-size: 14px;
+      text-align: center;
+      border-bottom: 1px solid rgba(48, 48, 48, 0.6);
+      transition: background 0.3s ease;
+    }
+
+    th {
+      background-color: #1e1e1e;
+      color: #00ffcc;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    tr:nth-child(even) {
+      background: rgba(30, 30, 30, 0.6);
+    }
+
+    tr:hover {
+      background: rgba(0, 255, 204, 0.15);
+    }
+
+    .dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      display: inline-block;
+      box-shadow: 0 0 5px rgba(255, 255, 255, 0.4);
+      animation: dotPulse 1.5s infinite;
+    }
+
+    @keyframes dotPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    .dot.red { background: #ff5252; animation-delay: 0s; }
+    .dot.green { background: #00ff7f; animation-delay: 0.2s; }
+    .dot.violet { background: #c94dff; animation-delay: 0.4s; }
+
+    .num.red { color: #ff5252; font-weight: 700; }
+    .num.green { color: #00ff7f; font-weight: 700; }
+    .num.violet { color: #c94dff; font-weight: 700; }
+
+    .success { color: #00ff7f; }
+    .failure { color: #ff5252; }
+
+    .stats {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 16px;
+      color: #ffffff;
+    }
+
+    .stats span {
+      font-weight: 600;
+      color: #00ffcc;
+    }
+
+    .tab-buttons {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .tab-button {
+      background: rgba(24, 24, 24, 0.95);
+      border: none;
+      color: #d8d8d8;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 0 5px;
+      border-radius: 8px;
+      transition: background 0.3s;
+    }
+
+    .tab-button:hover {
+      background: rgba(0, 255, 204, 0.2);
+    }
+
+    .tab-button.active {
+      background: linear-gradient(135deg, #00ffcc, #00997a);
+      color: #080808;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    @media (max-width: 480px) {
+      .header { font-size: 24px; }
+      .card { padding: 14px; }
+      th, td { padding: 8px; font-size: 12px; }
+      .prediction-box { font-size: 18px; }
+      .history-container, .pred-history-container { max-height: 250px; }
+    }
+
+    @media (min-width: 769px) {
+      .header { font-size: 32px; }
+      #currentPeriod { font-size: 20px; }
+      .prediction-box { font-size: 22px; }
+      th, td { font-size: 15px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header">𝐓𝐇𝐄 𝐋𝐒𝐑 𝐏𝐑𝐄𝐃𝐈𝐂𝐓𝐎𝐑 𝐕.1</div>
+
+    <div class="card">
+      <div id="currentPeriod">Current Period: Loading...</div>
+      <div id="liveTime">Time: --:--:--</div>
+      <div class="prediction-box" id="predictionBox">Analyzing...</div>
+      <div class="confidence" id="confidenceLevel">Confidence: Calculating...</div>
+    </div>
+
+    <div class="stats" id="accuracyStats">Prediction Accuracy: Calculating... (0/0)</div>
+
+    <div class="tab-buttons">
+      <button class="tab-button active" onclick="openTab('predHistory')">Prediction History</button>
+      <button class="tab-button" onclick="openTab('gameHistory')">Game History</button>
+    </div>
+
+    <div id="predHistory" class="pred-history-container tab-content">
+      <table>
+        <thead>
+          <tr>
+            <th>Period</th>
+            <th>Predicted</th>
+            <th>Actual</th>
+            <th>Result</th>
+          </tr>
+        </thead>
+        <tbody id="predHistoryTable">
+          <tr><td colspan="4">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="gameHistory" class="history-container tab-content">
+      <table>
+        <thead>
+          <tr>
+            <th>Period</th>
+            <th>Number</th>
+            <th>Big/Small</th>
+            <th>Color</th>
+          </tr>
+        </thead>
+        <tbody id="historyTable">
+          <tr><td colspan="4">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    localStorage.removeItem('bdg_predictions'); // Clear history on page load
+    const CURRENT_API = 'https://api.bdg88zf.com/api/webapi/GetGameIssue';
+    const HISTORY_API = 'https://draw.ar-lottery01.com/WinGo/WinGo_1M/GetHistoryIssuePage.json';
+
+    const REQUEST_DATA = {
+      typeId: 1,
+      language: 0,
+      random: "e7fe6c090da2495ab8290dac551ef1ed",
+      signature: "1F390E2B2D8A55D693E57FD905AE73A7",
+      timestamp: 1723726679
+    };
+
+    const STORAGE_KEY = 'bdg_predictions';
+    let predictionModel = {
+      weights: {
+        streak: 0.35,
+        frequency: 0.25,
+        transition: 0.2,
+        zigzag: 0.1,
+        trend: 0.05,
+        color: 0.05
+      },
+      learningRate: 0.01,
+      adjustWeights: function(success) {
+        if (success) {
+          this.weights.streak += this.learningRate;
+          this.weights.frequency += this.learningRate * 0.5;
+        } else {
+          this.weights.transition += this.learningRate;
+          this.weights.zigzag += this.learningRate * 0.8;
+        }
+        const total = Object.values(this.weights).reduce((a, b) => a + b, 0);
+        for (let key in this.weights) {
+          this.weights[key] = this.weights[key] / total;
+        }
+      }
+    };
+
+    function getBigSmall(num) {
+      return num >= 5 ? 'BIG' : 'SMALL';
+    }
+
+    function getColor(num) {
+      if ([1,3,7,9].includes(num)) return 'Green';
+      if ([2,4,6,8].includes(num)) return 'Red';
+      return 'Violet';
+    }
+
+    function detectPattern(numbers) {
+      const last3 = numbers.slice(0, 3).map(n => n.number);
+      const colors = last3.map(n => getColor(n));
+      if (new Set(colors).size === 1) return `3x ${colors[0]}`;
+      
+      const sizes = last3.map(n => getBigSmall(n));
+      if (new Set(sizes).size === 1) return `3x ${sizes[0]}`;
+      
+      if (sizes[0] === sizes[2] && sizes[0] !== sizes[1]) return `Zig-Zag`;
+      
+      const diffs = [last3[0] - last3[1], last3[1] - last3[2]];
+      if (diffs[0] === diffs[1] && Math.abs(diffs[0]) <= 3) return `Sequence`;
+      
+      return "Random";
+    }
+
+    function updateLiveTime() {
+      const now = new Date();
+      document.getElementById("liveTime").innerText = "Time: " + now.toLocaleTimeString('en-GB');
+    }
+
+    function loadPredictions() {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    }
+
+    function savePredictions(predictions) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(predictions));
+    }
+
+    function analyzePatterns(history) {
+      if (history.length < 5) return { prediction: "Analyzing...", confidence: 0 };
+
+      const sizes = history.map(h => getBigSmall(h.number));
+      const colors = history.map(h => getColor(h.number));
+      const numbers = history.map(h => h.number);
+
+      // Enhanced analysis with adaptive weights
+      const lastSize = sizes[0];
+      let streak = 1;
+      for (let i = 1; i < sizes.length; i++) {
+        if (sizes[i] === lastSize) streak++;
+        else break;
+      }
+
+      const bigCount = sizes.filter(s => s === "BIG").length;
+      const smallCount = sizes.filter(s => s === "SMALL").length;
+      const frequencyScore = bigCount / history.length > 0.5 ? 0.4 : 0.6;
+
+      let bigAfterBig = 0, smallAfterBig = 0, bigAfterSmall = 0, smallAfterSmall = 0;
+      for (let i = 0; i < sizes.length - 1; i++) {
+        if (sizes[i] === "BIG") {
+          sizes[i+1] === "BIG" ? bigAfterBig++ : smallAfterBig++;
+        } else {
+          sizes[i+1] === "BIG" ? bigAfterSmall++ : smallAfterSmall++;
+        }
+      }
+      const probBigAfterLast = lastSize === "BIG" 
+        ? bigAfterBig / (bigAfterBig + smallAfterBig || 1)
+        : bigAfterSmall / (bigAfterSmall + smallAfterSmall || 1);
+      const transitionScore = probBigAfterLast < 0.5 ? 0.6 : 0.4;
+
+      let zigZagCount = 0;
+      for (let i = 0; i < sizes.length - 2; i++) {
+        if (sizes[i] !== sizes[i+1] && sizes[i+1] !== sizes[i+2] && sizes[i] === sizes[i+2]) zigZagCount++;
+      }
+      const zigZagScore = zigZagCount / (sizes.length - 2) > 0.3 ? 0.7 : 0.3;
+
+      let ema = numbers[0];
+      let alpha = 2 / (numbers.length + 1);
+      for (let i = 1; i < numbers.length; i++) {
+        ema = alpha * numbers[i] + (1 - alpha) * ema;
+      }
+      const trendScore = ema >= 5 ? 0.4 : 0.6;
+
+      const colorPattern = colors.slice(0, 3);
+      const colorConsistency = colorPattern.every(c => c === colorPattern[0]) ? 0.7 : 0.3;
+
+      // Enhanced prediction with model weights
+      let prediction = "BIG";
+      let confidence = 0.5;
+
+      const weightedScore = 
+        (streak >= 3 ? 0.8 + (streak * 0.05) : 0.5) * predictionModel.weights.streak +
+        frequencyScore * predictionModel.weights.frequency +
+        transitionScore * predictionModel.weights.transition +
+        zigZagScore * predictionModel.weights.zigzag +
+        trendScore * predictionModel.weights.trend +
+        colorConsistency * predictionModel.weights.color;
+
+      if (streak >= 3) {
+        prediction = lastSize === "BIG" ? "SMALL" : "BIG";
+        confidence = 0.85 + (streak * 0.02) + (zigZagScore * 0.1);
+      } else if (zigZagCount > 2) {
+        prediction = lastSize === "BIG" ? "SMALL" : "BIG";
+        confidence = 0.75 + (zigZagCount * 0.05);
+      } else {
+        prediction = weightedScore > 0.5 ? "SMALL" : "BIG";
+        confidence = Math.max(
+          (streak >= 3 ? 0.8 + (streak * 0.05) : 0.5),
+          transitionScore,
+          zigZagScore,
+          trendScore
+        );
+      }
+
+      confidence += (zigZagScore * 0.1) + (colorConsistency * 0.05);
+      confidence = Math.min(0.98, Math.max(0.55, confidence));
+
+      return {
+        prediction,
+        confidence: Math.round(confidence * 100),
+        pattern: detectPattern(history)
+      };
+    }
+
+    function updatePredictionHistory(currentPeriod, history, prediction, confidence) {
+      let predictions = loadPredictions();
+
+            const existing = predictions.find(p => p.period === currentPeriod);
+      if (!existing) {
+        predictions.unshift({
+          period: currentPeriod,
+          predicted: prediction.prediction,
+          confidence: confidence,
+          actual: null,
+          result: null,
+          pattern: prediction.pattern
+        });
+      }
+
+      history.forEach(item => {
+        const pred = predictions.find(p => p.period === item.period);
+        if (pred && !pred.actual) {
+          pred.actual = item.size;
+          pred.result = pred.predicted === pred.actual ? 'Win' : 'Loss';
+          predictionModel.adjustWeights(pred.result === 'Win');
+        }
+      });
+
+      predictions = predictions.slice(0, 15);
+      savePredictions(predictions);
+
+      const verified = predictions.filter(p => p.actual);
+      const wins = verified.filter(p => p.result === 'Win').length;
+      const accuracy = verified.length ? Math.round((wins / verified.length) * 100) : 0;
+
+      document.getElementById("accuracyStats").innerText = `Prediction Accuracy: ${accuracy}% (${wins}/${verified.length})`;
+
+      const tbody = document.getElementById("predHistoryTable");
+      tbody.innerHTML = '';
+      predictions.forEach(item => {
+        const resultClass = item.result === 'Win' ? 'success' : item.result === 'Loss' ? 'failure' : '';
+        tbody.innerHTML += `
+          <tr>
+            <td>${item.period}</td>
+            <td>${item.predicted}</td>
+            <td>${item.actual || 'Pending'}</td>
+            <td class="${resultClass}">${item.result || '-'}</td>
+          </tr>
+        `;
+      });
+
+      const historyTbody = document.getElementById("historyTable");
+      historyTbody.innerHTML = '';
+      history.forEach(item => {
+        const colorClass = item.color.toLowerCase();
+        historyTbody.innerHTML += `
+          <tr>
+            <td>${item.period}</td>
+            <td class="num ${colorClass}">${item.number}</td>
+            <td>${item.size}</td>
+            <td><span class="dot ${colorClass}"></span></td>
+          </tr>
+        `;
+      });
+    }
+
+    async function fetchData() {
+      try {
+        const periodRes = await fetch(CURRENT_API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(REQUEST_DATA)
+        });
+        const periodData = await periodRes.json();
+        const currentPeriod = periodData?.data?.issueNumber || "Unavailable";
+        document.getElementById("currentPeriod").innerText = `Current Period: ${currentPeriod}`;
+
+        const res = await fetch(HISTORY_API + '?ts=' + Date.now());
+        const data = await res.json();
+        const history = data.data.list.slice(0, 15).map(item => {
+          return {
+            period: item.issueNumber,
+            number: parseInt(item.number),
+            size: getBigSmall(parseInt(item.number)),
+            color: getColor(parseInt(item.number))
+          };
+        });
+
+        const prediction = analyzePatterns(history);
+        document.getElementById("predictionBox").innerText = `Prediction → ${prediction.prediction}`;
+        document.getElementById("confidenceLevel").innerText = `Confidence: ${prediction.confidence}%`;
+
+        updatePredictionHistory(currentPeriod, history, prediction, prediction.confidence);
+
+      } catch (error) {
+        document.getElementById("predictionBox").innerText = "Prediction Error";
+        document.getElementById("confidenceLevel").innerText = "Confidence: N/A";
+      }
+    }
+
+    function openTab(tabId) {
+      var tabContents = document.getElementsByClassName('tab-content');
+      for (let i = 0; i < tabContents.length; i++) {
+        tabContents[i].style.display = 'none';
+      }
+      document.getElementById(tabId).style.display = 'block';
+
+      var buttons = document.getElementsByClassName('tab-button');
+      for (let i = 0; i < buttons.length; i++) {
+        buttons[i].classList.remove('active');
+      }
+      event.currentTarget.classList.add('active');
+    }
+
+    setInterval(updateLiveTime, 1000);
+    setInterval(fetchData, 5000);
+    fetchData();
+    updateLiveTime();
+    document.getElementById('predHistory').style.display = 'block';
+  </script>
+
+</body>
+</html>
