@@ -201,7 +201,7 @@
 </head>
 <body>
   <div class="container">
-    <div class="header">🔮 QuantumPulse Predictor</div>
+    <div class="header"> 𝐓𝐇𝐄 𝐋𝐒𝐑 𝐏𝐑𝐄𝐃𝐈𝐂𝐓𝐎𝐑 𝐕.1</div>
 
     <div class="mode-buttons">
       <button id="bigsmallMode" class="mode-button" onclick="setMode('bigsmall')">Big/Small</button>
@@ -569,7 +569,7 @@
           confidence = 0.9 + (streak * 0.03) + (entropyScore * 0.15);
         } else if (pattern === "Zig-Zag") {
           prediction = lastSize === "BIG" ? "SMALL" : "BIG";
-          confidence = 0.85 + (zigZagCount * 0.05);
+          accuracy = 0.85 + (zigZagCount * 0.05);
         } else if (entropy > 2.5) {
           prediction = weightedScore > 0.5 ? "SMALL" : "BIG";
           confidence = 0.75 + (entropyScore * 0.15);
@@ -921,6 +921,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+      localStorage.clear(); // Clear all local storage data on page load
       updateModeButtons();
       predObserver.observe(document.getElementById('predHistoryLoader'));
       gameObserver.observe(document.getElementById('gameHistoryLoader'));
