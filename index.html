@@ -3,66 +3,59 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BDG Ultra AI Predictor</title>
+  <title>QuantumPulse Predictor</title>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Outfit', sans-serif;
-      background: linear-gradient(135deg, #080808, #121212);
+      background: linear-gradient(135deg, #080808, #121212, #1a1a1a, #080808, #00ffcc, #00997a, #080808);
+      background-size: 100% 100%;
       color: #d8d8d8;
       margin: 0;
-      padding: 16px;
+      padding: 12px;
       display: flex;
-      flex-direction: column;
-      align-items: center;
+      justify-content: center;
+      align-items: flex-start;
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
     .container {
-      max-width: 768px;
+      max-width: 500px;
       width: 100%;
+      background: rgba(24, 24, 24, 0.95);
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 4px 18px rgba(0, 255, 204, 0.2);
     }
 
     .header {
       text-align: center;
-      font-size: 30px;
+      font-size: 26px;
       font-weight: 700;
       color: #00ffcc;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
       text-shadow: 0 0 8px rgba(0, 255, 204, 0.6);
-      letter-spacing: 0.8px;
-      animation: glow 1.5s ease-in-out infinite alternate;
-    }
-
-    @keyframes glow {
-      from { text-shadow: 0 0 8px rgba(0, 255, 204, 0.6); }
-      to { text-shadow: 0 0 16px rgba(0, 255, 204, 0.8); }
+      letter-spacing: 0.7px;
     }
 
     .card {
-      background: rgba(24, 24, 24, 0.95);
-      border-radius: 14px;
-      padding: 18px;
-      margin-bottom: 20px;
+      background: rgba(30, 30, 30, 0.95);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 16px;
       text-align: center;
-      box-shadow: 0 4px 16px rgba(0, 255, 204, 0.2);
-      backdrop-filter: blur(8px);
-      transition: transform 0.4s ease, box-shadow 0.4s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-4px) scale(1.02);
-      box-shadow: 0 6px 24px rgba(0, 255, 204, 0.3);
+      box-shadow: 0 3px 12px rgba(0, 255, 204, 0.15);
     }
 
     #currentPeriod {
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 600;
       color: #ffffff;
     }
 
     #liveTime {
-      font-size: 14px;
+      font-size: 12px;
       color: #b0b0b0;
       margin-top: 6px;
     }
@@ -70,56 +63,42 @@
     .prediction-box {
       background: linear-gradient(135deg, #00ffcc, #00997a);
       color: #080808;
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 600;
-      padding: 14px;
+      padding: 12px;
       border-radius: 10px;
-      margin-top: 14px;
-      box-shadow: 0 0 12px rgba(0, 255, 204, 0.5);
-      animation: pulseGlow 1.8s infinite;
-      position: relative;
+      margin-top: 12px;
+      box-shadow: 0 0 10px rgba(0, 255, 204, 0.4);
     }
 
     .confidence {
-      font-size: 12px;
+      font-size: 11px;
       margin-top: 8px;
       color: #ffffff;
       opacity: 0.8;
     }
 
-    @keyframes pulseGlow {
-      0% { transform: scale(1); box-shadow: 0 0 12px rgba(0, 255, 204, 0.5); }
-      50% { transform: scale(1.03); box-shadow: 0 0 20px rgba(0, 255, 204, 0.7); }
-      100% { transform: scale(1); box-shadow: 0 0 12px rgba(0, 255, 204, 0.5); }
-    }
-
     .history-container, .pred-history-container {
-      background: rgba(24, 24, 24, 0.95);
-      border-radius: 14px;
-      padding: 14px;
-      box-shadow: 0 4px 16px rgba(0, 255, 204, 0.2);
-      backdrop-filter: blur(8px);
-      transition: box-shadow 0.4s ease;
-      margin-bottom: 20px;
-    }
-
-    .history-container:hover, .pred-history-container:hover {
-      box-shadow: 0 6px 24px rgba(0, 255, 204, 0.3);
+      background: rgba(30, 30, 30, 0.95);
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 3px 12px rgba(0, 255, 204, 0.15);
+      margin-bottom: 16px;
+      max-height: 400px; /* Limit height for scrolling */
+      overflow-y: auto; /* Enable vertical scrolling */
     }
 
     table {
       width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
+      border-collapse: collapse;
       margin: 0;
+      font-size: 12px;
     }
 
     th, td {
-      padding: 12px;
-      font-size: 14px;
+      padding: 8px;
       text-align: center;
       border-bottom: 1px solid rgba(48, 48, 48, 0.6);
-      transition: background 0.3s ease;
     }
 
     th {
@@ -137,27 +116,16 @@
       background: rgba(30, 30, 30, 0.6);
     }
 
-    tr:hover {
-      background: rgba(0, 255, 204, 0.15);
-    }
-
     .dot {
-      width: 14px;
-      height: 14px;
+      width: 12px;
+      height: 12px;
       border-radius: 50%;
       display: inline-block;
-      box-shadow: 0 0 5px rgba(255, 255, 255, 0.4);
-      animation: dotPulse 1.5s infinite;
     }
 
-    @keyframes dotPulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.2); }
-    }
-
-    .dot.red { background: #ff5252; animation-delay: 0s; }
-    .dot.green { background: #00ff7f; animation-delay: 0.2s; }
-    .dot.violet { background: #c94dff; animation-delay: 0.4s; }
+    .dot.red { background: #ff5252; }
+    .dot.green { background: #00ff7f; }
+    .dot.violet { background: #c94dff; }
 
     .num.red { color: #ff5252; font-weight: 700; }
     .num.green { color: #00ff7f; font-weight: 700; }
@@ -168,8 +136,8 @@
 
     .stats {
       text-align: center;
-      margin-bottom: 20px;
-      font-size: 16px;
+      margin-bottom: 16px;
+      font-size: 14px;
       color: #ffffff;
     }
 
@@ -178,29 +146,25 @@
       color: #00ffcc;
     }
 
-    .tab-buttons {
+    .tab-buttons, .mode-buttons {
       display: flex;
       justify-content: center;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
 
-    .tab-button {
+    .tab-button, .mode-button {
       background: rgba(24, 24, 24, 0.95);
       border: none;
       color: #d8d8d8;
-      padding: 10px 20px;
+      padding: 8px 16px;
       cursor: pointer;
-      font-size: 16px;
-      margin: 0 5px;
+      font-size: 14px;
+      margin: 0 4px;
       border-radius: 8px;
-      transition: background 0.3s;
+      touch-action: manipulation;
     }
 
-    .tab-button:hover {
-      background: rgba(0, 255, 204, 0.2);
-    }
-
-    .tab-button.active {
+    .tab-button.active, .mode-button.active {
       background: linear-gradient(135deg, #00ffcc, #00997a);
       color: #080808;
     }
@@ -209,26 +173,40 @@
       display: none;
     }
 
-    @media (max-width: 480px) {
-      .header { font-size: 24px; }
-      .card { padding: 14px; }
-      th, td { padding: 8px; font-size: 12px; }
-      .prediction-box { font-size: 18px; }
-      .history-container, .pred-history-container { max-height: 250px; }
+    .loader {
+      text-align: center;
+      padding: 10px;
+      color: #00ffcc;
+      font-size: 12px;
     }
 
-    @media (min-width: 769px) {
-      .header { font-size: 32px; }
-      #currentPeriod { font-size: 20px; }
-      .prediction-box { font-size: 22px; }
-      th, td { font-size: 15px; }
+    @media (max-width: 480px) {
+      .container { max-width: 100%; padding: 12px; }
+      .header { font-size: 24px; }
+      .card { padding: 12px; }
+      th, td { padding: 6px; font-size: 11px; }
+      .prediction-box { font-size: 16px; }
+      .tab-button, .mode-button { padding: 6px 12px; font-size: 13px; }
+      .history-container, .pred-history-container { max-height: 300px; }
+    }
+
+    @media (min-width: 481px) {
+      .container { max-width: 550px; }
+      .header { font-size: 28px; }
+      #currentPeriod { font-size: 17px; }
+      .prediction-box { font-size: 20px; }
+      th, td { font-size: 13px; }
     }
   </style>
 </head>
 <body>
-
   <div class="container">
-    <div class="header">𝐓𝐇𝐄 𝐋𝐒𝐑 𝐏𝐑𝐄𝐃𝐈𝐂𝐓𝐎𝐑 𝐕.1</div>
+    <div class="header">🔮 QuantumPulse Predictor</div>
+
+    <div class="mode-buttons">
+      <button id="bigsmallMode" class="mode-button" onclick="setMode('bigsmall')">Big/Small</button>
+      <button id="colorMode" class="mode-button" onclick="setMode('color')">Color</button>
+    </div>
 
     <div class="card">
       <div id="currentPeriod">Current Period: Loading...</div>
@@ -249,7 +227,7 @@
         <thead>
           <tr>
             <th>Period</th>
-            <th>Predicted</th>
+            <th>Pred.</th>
             <th>Actual</th>
             <th>Result</th>
           </tr>
@@ -258,6 +236,7 @@
           <tr><td colspan="4">Loading...</td></tr>
         </tbody>
       </table>
+      <div id="predHistoryLoader" class="loader">Loading more...</div>
     </div>
 
     <div id="gameHistory" class="history-container tab-content">
@@ -265,8 +244,8 @@
         <thead>
           <tr>
             <th>Period</th>
-            <th>Number</th>
-            <th>Big/Small</th>
+            <th>Num</th>
+            <th>B/S</th>
             <th>Color</th>
           </tr>
         </thead>
@@ -274,11 +253,11 @@
           <tr><td colspan="4">Loading...</td></tr>
         </tbody>
       </table>
+      <div id="gameHistoryLoader" class="loader">Loading more...</div>
     </div>
   </div>
 
   <script>
-    localStorage.removeItem('bdg_predictions'); // Clear history on page load
     const CURRENT_API = 'https://api.bdg88zf.com/api/webapi/GetGameIssue';
     const HISTORY_API = 'https://draw.ar-lottery01.com/WinGo/WinGo_1M/GetHistoryIssuePage.json';
 
@@ -290,55 +269,207 @@
       timestamp: 1723726679
     };
 
-    const STORAGE_KEY = 'bdg_predictions';
+    const STORAGE_KEY = 'quantum_pulse_predictions';
+    const MODEL_KEY = 'quantum_pulse_model';
+    const MODE_KEY = 'current_mode';
+    const PERFORMANCE_KEY = 'mode_performance';
+    const MAX_PREDICTIONS = 2880; // Store up to 2880 predictions (~1 day at 1-minute intervals)
+    const BATCH_SIZE = 20; // Number of rows to load per batch
+    const AUTO_SWITCH_THRESHOLD = 20; // Minimum predictions before auto-switching
+    const ACCURACY_GAP = 10; // Percentage difference to trigger switch
+
+    let currentMode = localStorage.getItem(MODE_KEY) || 'bigsmall';
+
     let predictionModel = {
-      weights: {
-        streak: 0.35,
-        frequency: 0.25,
-        transition: 0.2,
-        zigzag: 0.1,
-        trend: 0.05,
-        color: 0.05
+      bigsmall: {
+        weights: {
+          streak: 0.25,
+          frequency: 0.2,
+          transition: 0.2,
+          zigzag: 0.15,
+          trend: 0.1,
+          color: 0.1,
+          entropy: 0.1,
+          momentum: 0.05,
+          variance: 0.05
+        },
+        performanceHistory: []
       },
-      learningRate: 0.01,
-      adjustWeights: function(success) {
+      color: {
+        weights: {
+          streak: 0.25,
+          frequency: 0.2,
+          transition: 0.2,
+          zigzag: 0.15,
+          trend: 0.1,
+          color: 0.1,
+          entropy: 0.1,
+          momentum: 0.05,
+          variance: 0.05
+        },
+        performanceHistory: []
+      },
+      learningRate: 0.05,
+      adjustWeights: function(mode, success, patternType) {
+        const model = this[mode];
+        model.performanceHistory.push({ success, pattern: patternType });
+        if (model.performanceHistory.length > AUTO_SWITCH_THRESHOLD) model.performanceHistory.shift();
+
+        const recentSuccessRate = model.performanceHistory.filter(p => p.success).length / model.performanceHistory.length;
+        const boost = recentSuccessRate > 0.7 ? 1.5 : recentSuccessRate < 0.3 ? 0.5 : 1;
+
         if (success) {
-          this.weights.streak += this.learningRate;
-          this.weights.frequency += this.learningRate * 0.5;
+          model.weights[patternType] += this.learningRate * boost;
+          model.weights.streak += this.learningRate * 0.8 * boost;
+          model.weights.frequency += this.learningRate * 0.6 * boost;
+          model.weights.momentum += this.learningRate * 0.5 * boost;
         } else {
-          this.weights.transition += this.learningRate;
-          this.weights.zigzag += this.learningRate * 0.8;
+          model.weights.transition += this.learningRate * 1.0 * boost;
+          model.weights.zigzag += this.learningRate * 0.9 * boost;
+          model.weights.entropy += this.learningRate * 0.7 * boost;
         }
-        const total = Object.values(this.weights).reduce((a, b) => a + b, 0);
-        for (let key in this.weights) {
-          this.weights[key] = this.weights[key] / total;
+
+        const total = Object.values(model.weights).reduce((a, b) => a + b, 0);
+        for (let key in model.weights) {
+          model.weights[key] = model.weights[key] / total;
+        }
+
+        if (recentSuccessRate < 0.4 && model.performanceHistory.length >= AUTO_SWITCH_THRESHOLD) {
+          this.autoShiftLogic(mode);
+        }
+
+        saveModel();
+      },
+      autoShiftLogic: function(mode) {
+        const model = this[mode];
+        const patternCounts = {};
+        model.performanceHistory.forEach(p => {
+          patternCounts[p.pattern] = (patternCounts[p.pattern] || 0) + (p.success ? 1 : 0);
+        });
+        const topPattern = Object.keys(patternCounts).reduce((a, b) => patternCounts[a] > patternCounts[b] ? a : b, 'streak');
+        model.weights[topPattern] += this.learningRate * 2;
+        model.weights.momentum += this.learningRate;
+        const total = Object.values(model.weights).reduce((a, b) => a + b, 0);
+        for (let key in model.weights) {
+          model.weights[key] = model.weights[key] / total;
         }
       }
     };
+
+    function loadModel() {
+      const saved = localStorage.getItem(MODEL_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        predictionModel.bigsmall.weights = parsed.bigsmall?.weights || predictionModel.bigsmall.weights;
+        predictionModel.bigsmall.performanceHistory = parsed.bigsmall?.performanceHistory || [];
+        predictionModel.color.weights = parsed.color?.weights || predictionModel.color.weights;
+        predictionModel.color.performanceHistory = parsed.color?.performanceHistory || [];
+      }
+    }
+
+    function saveModel() {
+      localStorage.setItem(MODEL_KEY, JSON.stringify({
+        bigsmall: {
+          weights: predictionModel.bigsmall.weights,
+          performanceHistory: predictionModel.bigsmall.performanceHistory
+        },
+        color: {
+          weights: predictionModel.color.weights,
+          performanceHistory: predictionModel.color.performanceHistory
+        }
+      }));
+    }
+
+    function loadPerformance() {
+      return JSON.parse(localStorage.getItem(PERFORMANCE_KEY)) || {
+        bigsmall: { wins: 0, total: 0, accuracy: 0 },
+        color: { wins: 0, total: 0, accuracy: 0 }
+      };
+    }
+
+    function savePerformance(performance) {
+      localStorage.setItem(PERFORMANCE_KEY, JSON.stringify(performance));
+    }
+
+    function setMode(mode) {
+      if (mode === currentMode) return;
+      currentMode = mode;
+      localStorage.setItem(MODE_KEY, mode);
+      // Do not clear history to allow performance tracking
+      document.getElementById("predHistoryTable").innerHTML = '<tr><td colspan="4">Loading...</td></tr>';
+      document.getElementById("predictionBox").innerText = "Analyzing...";
+      document.getElementById("confidenceLevel").innerText = "Confidence: Calculating...";
+      updateModeButtons();
+      fetchData();
+    }
+
+    function autoSwitchMode() {
+      const performance = loadPerformance();
+      const bigsmallAcc = performance.bigsmall.total >= AUTO_SWITCH_THRESHOLD ? performance.bigsmall.accuracy : 0;
+      const colorAcc = performance.color.total >= AUTO_SWITCH_THRESHOLD ? performance.color.accuracy : 0;
+
+      if (performance.bigsmall.total >= AUTO_SWITCH_THRESHOLD && performance.color.total >= AUTO_SWITCH_THRESHOLD) {
+        if (currentMode === 'bigsmall' && colorAcc > bigsmallAcc + ACCURACY_GAP) {
+          setMode('color');
+        } else if (currentMode === 'color' && bigsmallAcc > colorAcc + ACCURACY_GAP) {
+          setMode('bigsmall');
+        }
+      }
+    }
+
+    function updateModeButtons() {
+      document.getElementById("bigsmallMode").classList.toggle('active', currentMode === 'bigsmall');
+      document.getElementById("colorMode").classList.toggle('active', currentMode === 'color');
+    }
 
     function getBigSmall(num) {
       return num >= 5 ? 'BIG' : 'SMALL';
     }
 
     function getColor(num) {
-      if ([1,3,7,9].includes(num)) return 'Green';
-      if ([2,4,6,8].includes(num)) return 'Red';
+      if ([1, 3, 7, 9].includes(num)) return 'Green';
+      if ([2, 4, 6, 8].includes(num)) return 'Red';
+      if (num === 0) return 'Red/Violet';
+      if (num === 5) return 'Green/Violet';
       return 'Violet';
     }
 
-    function detectPattern(numbers) {
-      const last3 = numbers.slice(0, 3).map(n => n.number);
-      const colors = last3.map(n => getColor(n));
-      if (new Set(colors).size === 1) return `3x ${colors[0]}`;
-      
-      const sizes = last3.map(n => getBigSmall(n));
-      if (new Set(sizes).size === 1) return `3x ${sizes[0]}`;
-      
-      if (sizes[0] === sizes[2] && sizes[0] !== sizes[1]) return `Zig-Zag`;
-      
-      const diffs = [last3[0] - last3[1], last3[1] - last3[2]];
-      if (diffs[0] === diffs[1] && Math.abs(diffs[0]) <= 3) return `Sequence`;
-      
+    function calculateEntropy(numbers) {
+      const counts = {};
+      numbers.forEach(n => counts[n] = (counts[n] || 0) + 1);
+      const probs = Object.values(counts).map(c => c / numbers.length);
+      return -probs.reduce((sum, p) => sum + p * Math.log2(p), 0);
+    }
+
+    function calculateMomentum(numbers) {
+      const last5 = numbers.slice(0, 5).map(n => n.number);
+      const diffs = last5.slice(0, -1).map((n, i) => last5[i] - last5[i + 1]);
+      const avgDiff = diffs.reduce((a, b) => a + b, 0) / diffs.length;
+      return Math.abs(avgDiff) > 1 ? 0.7 : 0.3;
+    }
+
+    function predictNextNumber(numbers) {
+      const n = Math.min(5, numbers.length);
+      if (n < 2) return Math.floor(Math.random() * 10);
+      const y = numbers.slice(0, n).reverse(); // Oldest to newest
+      const x = Array.from({length: n}, (_, i) => i + 1);
+      const meanX = (n + 1) / 2;
+      const meanY = y.reduce((a, b) => a + b, 0) / n;
+      const ssxx = x.reduce((a, xi, i) => a + Math.pow(xi - meanX, 2), 0);
+      const sxy = x.reduce((a, xi, i) => a + (xi - meanX) * (y[i] - meanY), 0);
+      const slope = sxy / ssxx;
+      const intercept = meanY - slope * meanX;
+      const ssyy = y.reduce((a, yi) => a + Math.pow(yi - meanY, 2), 0);
+      const r2 = Math.pow(sxy, 2) / (ssxx * ssyy || 1);
+      let nextY = intercept + slope * (n + 1);
+      nextY = Math.max(0, Math.min(9, nextY));
+      return {predicted: Math.round(nextY), r2};
+    }
+
+    function detectPattern(sequence) {
+      const last3 = sequence.slice(0, 3);
+      if (new Set(last3).size === 1) return `3x ${last3[0]}`;
+      if (last3[0] === last3[2] && last3[0] !== last3[1]) return `Zig-Zag`;
       return "Random";
     }
 
@@ -352,131 +483,243 @@
     }
 
     function savePredictions(predictions) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(predictions));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(predictions.slice(0, MAX_PREDICTIONS)));
     }
 
     function analyzePatterns(history) {
-      if (history.length < 5) return { prediction: "Analyzing...", confidence: 0 };
+      if (history.length < 5) return { prediction: "Analyzing...", confidence: 0, pattern: "None" };
 
       const sizes = history.map(h => getBigSmall(h.number));
       const colors = history.map(h => getColor(h.number));
       const numbers = history.map(h => h.number);
 
-      // Enhanced analysis with adaptive weights
-      const lastSize = sizes[0];
-      let streak = 1;
-      for (let i = 1; i < sizes.length; i++) {
-        if (sizes[i] === lastSize) streak++;
-        else break;
-      }
+      const entropy = calculateEntropy(numbers.slice(0, 10));
+      const entropyScore = entropy > 2.5 ? 0.65 : 0.35;
 
-      const bigCount = sizes.filter(s => s === "BIG").length;
-      const smallCount = sizes.filter(s => s === "SMALL").length;
-      const frequencyScore = bigCount / history.length > 0.5 ? 0.4 : 0.6;
+      const momentumScore = calculateMomentum(history);
 
-      let bigAfterBig = 0, smallAfterBig = 0, bigAfterSmall = 0, smallAfterSmall = 0;
-      for (let i = 0; i < sizes.length - 1; i++) {
-        if (sizes[i] === "BIG") {
-          sizes[i+1] === "BIG" ? bigAfterBig++ : smallAfterBig++;
-        } else {
-          sizes[i+1] === "BIG" ? bigAfterSmall++ : smallAfterSmall++;
+      const mean = numbers.reduce((sum, n) => sum + n, 0) / numbers.length;
+      const variance = numbers.reduce((sum, n) => sum + Math.pow(n - mean, 2), 0) / numbers.length;
+      const varianceScore = Math.sqrt(variance) > 2.5 ? 0.65 : 0.35;
+
+      const {predicted: predictedNum, r2} = predictNextNumber(numbers);
+      const trendScore = r2;
+
+      let prediction, confidence, pattern;
+
+      if (currentMode === 'bigsmall') {
+        const lastSize = sizes[0];
+        let streak = 1;
+        for (let i = 1; i < sizes.length; i++) {
+          if (sizes[i] === lastSize) streak++;
+          else break;
         }
-      }
-      const probBigAfterLast = lastSize === "BIG" 
-        ? bigAfterBig / (bigAfterBig + smallAfterBig || 1)
-        : bigAfterSmall / (bigAfterSmall + smallAfterSmall || 1);
-      const transitionScore = probBigAfterLast < 0.5 ? 0.6 : 0.4;
 
-      let zigZagCount = 0;
-      for (let i = 0; i < sizes.length - 2; i++) {
-        if (sizes[i] !== sizes[i+1] && sizes[i+1] !== sizes[i+2] && sizes[i] === sizes[i+2]) zigZagCount++;
-      }
-      const zigZagScore = zigZagCount / (sizes.length - 2) > 0.3 ? 0.7 : 0.3;
+        const bigCount = sizes.filter(s => s === "BIG").length;
+        const smallCount = sizes.filter(s => s === "SMALL").length;
+        const frequencyScore = bigCount / history.length > 0.5 ? 0.45 : 0.55;
 
-      let ema = numbers[0];
-      let alpha = 2 / (numbers.length + 1);
-      for (let i = 1; i < numbers.length; i++) {
-        ema = alpha * numbers[i] + (1 - alpha) * ema;
-      }
-      const trendScore = ema >= 5 ? 0.4 : 0.6;
+        let bigAfterBig = 0, smallAfterBig = 0, bigAfterSmall = 0, smallAfterSmall = 0;
+        for (let i = 0; i < sizes.length - 1; i++) {
+          if (sizes[i] === "BIG") {
+            sizes[i + 1] === "BIG" ? bigAfterBig++ : smallAfterBig++;
+          } else {
+            sizes[i + 1] === "BIG" ? bigAfterSmall++ : smallAfterSmall++;
+          }
+        }
+        const probBigAfterLast = lastSize === "BIG"
+          ? bigAfterBig / (bigAfterBig + smallAfterBig || 1)
+          : bigAfterSmall / (bigAfterSmall + smallAfterSmall || 1);
+        const transitionScore = probBigAfterLast < 0.5 ? 0.65 : 0.35;
 
-      const colorPattern = colors.slice(0, 3);
-      const colorConsistency = colorPattern.every(c => c === colorPattern[0]) ? 0.7 : 0.3;
+        let zigZagCount = 0;
+        for (let i = 0; i < sizes.length - 2; i++) {
+          if (sizes[i] !== sizes[i + 1] && sizes[i + 1] !== sizes[i + 2] && sizes[i] === sizes[i + 2]) zigZagCount++;
+        }
+        const zigZagScore = zigZagCount / (sizes.length - 2) > 0.3 ? 0.75 : 0.25;
 
-      // Enhanced prediction with model weights
-      let prediction = "BIG";
-      let confidence = 0.5;
+        let ema = numbers[0];
+        let alpha = 2 / (numbers.length + 1);
+        for (let i = 1; i < numbers.length; i++) {
+          ema = alpha * numbers[i] + (1 - alpha) * ema;
+        }
+        const trendScoreBS = ema >= 5 ? 0.4 : 0.6;
 
-      const weightedScore = 
-        (streak >= 3 ? 0.8 + (streak * 0.05) : 0.5) * predictionModel.weights.streak +
-        frequencyScore * predictionModel.weights.frequency +
-        transitionScore * predictionModel.weights.transition +
-        zigZagScore * predictionModel.weights.zigzag +
-        trendScore * predictionModel.weights.trend +
-        colorConsistency * predictionModel.weights.color;
+        const colorPattern = colors.slice(0, 3).map(c => c.split('/')[0]);
+        const colorConsistency = colorPattern.every(c => c === colorPattern[0]) ? 0.8 : 0.2;
 
-      if (streak >= 3) {
-        prediction = lastSize === "BIG" ? "SMALL" : "BIG";
-        confidence = 0.85 + (streak * 0.02) + (zigZagScore * 0.1);
-      } else if (zigZagCount > 2) {
-        prediction = lastSize === "BIG" ? "SMALL" : "BIG";
-        confidence = 0.75 + (zigZagCount * 0.05);
+        pattern = detectPattern(sizes);
+
+        let weightedScore =
+          (streak >= 4 ? 0.9 + (streak * 0.05) : 0.5) * predictionModel.bigsmall.weights.streak +
+          frequencyScore * predictionModel.bigsmall.weights.frequency +
+          transitionScore * predictionModel.bigsmall.weights.transition +
+          zigZagScore * predictionModel.bigsmall.weights.zigzag +
+          trendScoreBS * predictionModel.bigsmall.weights.trend +
+          colorConsistency * predictionModel.bigsmall.weights.color +
+          entropyScore * predictionModel.bigsmall.weights.entropy +
+          momentumScore * predictionModel.bigsmall.weights.momentum +
+          varianceScore * predictionModel.bigsmall.weights.variance;
+
+        prediction = "BIG";
+        confidence = 0.5;
+
+        if (streak >= 4) {
+          prediction = lastSize === "BIG" ? "SMALL" : "BIG";
+          confidence = 0.9 + (streak * 0.03) + (entropyScore * 0.15);
+        } else if (pattern === "Zig-Zag") {
+          prediction = lastSize === "BIG" ? "SMALL" : "BIG";
+          confidence = 0.85 + (zigZagCount * 0.05);
+        } else if (entropy > 2.5) {
+          prediction = weightedScore > 0.5 ? "SMALL" : "BIG";
+          confidence = 0.75 + (entropyScore * 0.15);
+        } else if (momentumScore > 0.5) {
+          prediction = weightedScore > 0.5 ? "SMALL" : "BIG";
+          confidence = 0.8 + (momentumScore * 0.1);
+        } else {
+          prediction = weightedScore > 0.5 ? "SMALL" : "BIG";
+          confidence = Math.max(
+            (streak >= 3 ? 0.85 + (streak * 0.05) : 0.5),
+            transitionScore,
+            zigZagScore,
+            trendScoreBS,
+            entropyScore,
+            momentumScore,
+            varianceScore
+          );
+        }
+
+        confidence += (zigZagScore * 0.15) + (colorConsistency * 0.05) + (entropyScore * 0.1) + (momentumScore * 0.05) + (varianceScore * 0.05);
+        confidence = Math.min(0.95, Math.max(0.65, confidence));
+
+        if (confidence < 0.7) {
+          const randomFactor = Math.random();
+          prediction = randomFactor < frequencyScore ? "BIG" : "SMALL";
+          confidence += 0.05;
+        }
+
       } else {
-        prediction = weightedScore > 0.5 ? "SMALL" : "BIG";
-        confidence = Math.max(
-          (streak >= 3 ? 0.8 + (streak * 0.05) : 0.5),
-          transitionScore,
-          zigZagScore,
-          trendScore
-        );
-      }
+        const lastColor = colors[0].split('/')[0];
+        let streak = 1;
+        for (let i = 1; i < colors.length; i++) {
+          if (colors[i].split('/')[0] === lastColor) streak++;
+          else break;
+        }
 
-      confidence += (zigZagScore * 0.1) + (colorConsistency * 0.05);
-      confidence = Math.min(0.98, Math.max(0.55, confidence));
+        const colorCounts = { Green: 0, Red: 0, Violet: 0 };
+        colors.forEach(c => {
+          c.split('/').forEach(cl => colorCounts[cl]++);
+        });
+        const total = colors.length * 1.2;
+        const frequencyScores = {
+          Green: colorCounts.Green / total,
+          Red: colorCounts.Red / total,
+          Violet: colorCounts.Violet / total
+        };
+
+        const transition = {
+          Green: {Green: 0, Red: 0, Violet: 0},
+          Red: {Green: 0, Red: 0, Violet: 0},
+          Violet: {Green: 0, Red: 0, Violet: 0}
+        };
+        for (let i = 0; i < colors.length - 1; i++) {
+          const from = colors[i].split('/')[0];
+          const to = colors[i + 1].split('/')[0];
+          transition[from][to]++;
+        }
+        const fromCounts = transition[lastColor];
+        const fromTotal = Object.values(fromCounts).reduce((a, b) => a + b, 0) || 1;
+        const transitionScores = {
+          Green: fromCounts.Green / fromTotal,
+          Red: fromCounts.Red / fromTotal,
+          Violet: fromCounts.Violet / fromTotal
+        };
+
+        let zigZagCount = 0;
+        for (let i = 0; i < colors.length - 2; i++) {
+          const c1 = colors[i].split('/')[0];
+          const c2 = colors[i + 1].split('/')[0];
+          const c3 = colors[i + 2].split('/')[0];
+          if (c1 !== c2 && c1 === c3 && c2 !== 'Violet') zigZagCount++;
+        }
+        const zigZagScore = zigZagCount / (colors.length - 2) > 0.3 ? 0.75 : 0.25;
+
+        const predictedColorStr = getColor(predictedNum);
+        const predictedColorArr = predictedColorStr.split('/');
+
+        pattern = detectPattern(colors.map(c => c.split('/')[0]));
+
+        let scores = {
+          Green: 0,
+          Red: 0,
+          Violet: 0
+        };
+
+        scores.Green += frequencyScores.Green * predictionModel.color.weights.frequency;
+        scores.Red += frequencyScores.Red * predictionModel.color.weights.frequency;
+        scores.Violet += frequencyScores.Violet * predictionModel.color.weights.frequency;
+
+        scores.Green += transitionScores.Green * predictionModel.color.weights.transition;
+        scores.Red += transitionScores.Red * predictionModel.color.weights.transition;
+        scores.Violet += transitionScores.Violet * predictionModel.color.weights.transition;
+
+        if (streak >= 4) {
+          scores[lastColor] += 0.1 * predictionModel.color.weights.streak;
+          ['Green', 'Red', 'Violet'].filter(c => c !== lastColor).forEach(c => scores[c] += 0.45 * predictionModel.color.weights.streak);
+        } else {
+          scores[lastColor] += (streak / 4) * predictionModel.color.weights.streak;
+        }
+
+        if (zigZagScore > 0.5) {
+          const opposite = lastColor === 'Green' ? 'Red' : lastColor === 'Red' ? 'Green' : 'Violet';
+          scores[opposite] += zigZagScore * predictionModel.color.weights.zigzag;
+        }
+
+        predictedColorArr.forEach(c => scores[c] += trendScore * predictionModel.color.weights.trend);
+
+        if (entropyScore > 0.5) {
+          const minFreqKey = Object.keys(frequencyScores).reduce((a, b) => frequencyScores[a] < frequencyScores[b] ? a : b);
+          scores[minFreqKey] += entropyScore * predictionModel.color.weights.entropy;
+        }
+
+        if (momentumScore > 0.5) {
+          predictedColorArr.forEach(c => scores[c] += momentumScore * predictionModel.color.weights.momentum);
+        }
+
+        if (varianceScore > 0.5) {
+          scores.Violet += varianceScore * predictionModel.color.weights.variance;
+        }
+
+        if (!colors.slice(0, 5).some(c => c.includes('Violet'))) {
+          scores.Violet += 0.25 * predictionModel.color.weights.color;
+        }
+
+        ['Green', 'Red', 'Violet'].forEach(c => {
+          scores[c] += Math.random() * 0.05;
+        });
+
+        const totalScore = Object.values(scores).reduce((a, b) => a + b, 0) || 1;
+        ['Green', 'Red', 'Violet'].forEach(c => scores[c] /= totalScore);
+
+        prediction = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+        confidence = scores[prediction] + (entropyScore * 0.1) + (momentumScore * 0.05) + (varianceScore * 0.05) + (zigZagScore * 0.15) + (trendScore * 0.1);
+        confidence = Math.min(0.95, Math.max(0.65, confidence));
+      }
 
       return {
         prediction,
         confidence: Math.round(confidence * 100),
-        pattern: detectPattern(history)
+        pattern
       };
     }
 
-    function updatePredictionHistory(currentPeriod, history, prediction, confidence) {
-      let predictions = loadPredictions();
+    let predDisplayCount = BATCH_SIZE;
+    let gameDisplayCount = BATCH_SIZE;
 
-            const existing = predictions.find(p => p.period === currentPeriod);
-      if (!existing) {
-        predictions.unshift({
-          period: currentPeriod,
-          predicted: prediction.prediction,
-          confidence: confidence,
-          actual: null,
-          result: null,
-          pattern: prediction.pattern
-        });
-      }
-
-      history.forEach(item => {
-        const pred = predictions.find(p => p.period === item.period);
-        if (pred && !pred.actual) {
-          pred.actual = item.size;
-          pred.result = pred.predicted === pred.actual ? 'Win' : 'Loss';
-          predictionModel.adjustWeights(pred.result === 'Win');
-        }
-      });
-
-      predictions = predictions.slice(0, 15);
-      savePredictions(predictions);
-
-      const verified = predictions.filter(p => p.actual);
-      const wins = verified.filter(p => p.result === 'Win').length;
-      const accuracy = verified.length ? Math.round((wins / verified.length) * 100) : 0;
-
-      document.getElementById("accuracyStats").innerText = `Prediction Accuracy: ${accuracy}% (${wins}/${verified.length})`;
-
+    function renderPredictionRows(predictions, start, count) {
       const tbody = document.getElementById("predHistoryTable");
-      tbody.innerHTML = '';
-      predictions.forEach(item => {
+      const slice = predictions.slice(start, start + count);
+      slice.forEach(item => {
         const resultClass = item.result === 'Win' ? 'success' : item.result === 'Loss' ? 'failure' : '';
         tbody.innerHTML += `
           <tr>
@@ -487,20 +730,98 @@
           </tr>
         `;
       });
+      return slice.length;
+    }
 
-      const historyTbody = document.getElementById("historyTable");
-      historyTbody.innerHTML = '';
-      history.forEach(item => {
-        const colorClass = item.color.toLowerCase();
-        historyTbody.innerHTML += `
+    function renderGameHistoryRows(history, start, count) {
+      const tbody = document.getElementById("historyTable");
+      const slice = history.slice(start, start + count);
+      slice.forEach(item => {
+        const colors = item.color.split('/');
+        const dots = colors.map(c => `<span class="dot ${c.toLowerCase()}"></span>`).join('');
+        const primaryClass = colors[0].toLowerCase();
+        tbody.innerHTML += `
           <tr>
             <td>${item.period}</td>
-            <td class="num ${colorClass}">${item.number}</td>
+            <td class="num ${primaryClass}">${item.number}</td>
             <td>${item.size}</td>
-            <td><span class="dot ${colorClass}"></span></td>
+            <td>${dots}</td>
           </tr>
         `;
       });
+      return slice.length;
+    }
+
+    function updatePredictionHistory(currentPeriod, history, prediction, confidence) {
+      let predictions = loadPredictions();
+      let performance = loadPerformance();
+
+      const existing = predictions.find(p => p.period === currentPeriod);
+      if (!existing && currentPeriod) {
+        predictions.unshift({
+          period: currentPeriod,
+          predicted: prediction.prediction,
+          confidence: confidence,
+          actual: null,
+          result: null,
+          pattern: prediction.pattern,
+          mode: currentMode
+        });
+      }
+
+      history.forEach(item => {
+        const pred = predictions.find(p => p.period === item.period);
+        if (pred && !pred.actual) {
+          let isWin;
+          if (pred.mode === 'bigsmall') {
+            pred.actual = item.size;
+            isWin = pred.predicted === pred.actual;
+            pred.result = isWin ? 'Win' : 'Loss';
+          } else {
+            pred.actual = item.color;
+            isWin = item.color.includes(pred.predicted);
+            pred.result = isWin ? 'Win' : 'Loss';
+          }
+          let patternType = 'streak';
+          const lowerPattern = pred.pattern.toLowerCase();
+          if (lowerPattern.includes('zig-zag')) patternType = 'zigzag';
+          else if (lowerPattern.includes('sequence')) patternType = 'trend';
+          else if (lowerPattern.includes('random')) patternType = 'entropy';
+          else if (lowerPattern.includes('3x')) {
+            if (lowerPattern.includes('color')) patternType = 'color';
+            else patternType = 'streak';
+          }
+          predictionModel.adjustWeights(pred.mode, isWin, patternType);
+
+          // Update performance metrics
+          performance[pred.mode].total++;
+          if (isWin) performance[pred.mode].wins++;
+          performance[pred.mode].accuracy = Math.round((performance[pred.mode].wins / performance[pred.mode].total) * 100);
+        }
+      });
+
+      savePredictions(predictions);
+      savePerformance(performance);
+
+      const verified = predictions.filter(p => p.actual && p.mode === currentMode);
+      const wins = verified.filter(p => p.result === 'Win').length;
+      const accuracy = verified.length ? Math.round((wins / verified.length) * 100) : 0;
+
+      document.getElementById("accuracyStats").innerText = `Prediction Accuracy: ${accuracy}% (${wins}/${verified.length})`;
+
+      const tbody = document.getElementById("predHistoryTable");
+      tbody.innerHTML = '';
+      predDisplayCount = BATCH_SIZE;
+      renderPredictionRows(predictions.filter(p => p.mode === currentMode), 0, predDisplayCount);
+      document.getElementById("predHistoryLoader").style.display = predDisplayCount >= predictions.filter(p => p.mode === currentMode).length ? 'none' : 'block';
+
+      const historyTbody = document.getElementById("historyTable");
+      historyTbody.innerHTML = '';
+      gameDisplayCount = BATCH_SIZE;
+      renderGameHistoryRows(history, 0, gameDisplayCount);
+      document.getElementById("gameHistoryLoader").style.display = gameDisplayCount >= history.length ? 'none' : 'block';
+
+      autoSwitchMode();
     }
 
     async function fetchData() {
@@ -516,12 +837,14 @@
 
         const res = await fetch(HISTORY_API + '?ts=' + Date.now());
         const data = await res.json();
-        const history = data.data.list.slice(0, 15).map(item => {
+        const history = data.data.list.map(item => {
+          const num = parseInt(item.number);
+          const color = getColor(num);
           return {
             period: item.issueNumber,
-            number: parseInt(item.number),
-            size: getBigSmall(parseInt(item.number)),
-            color: getColor(parseInt(item.number))
+            number: num,
+            size: getBigSmall(num),
+            color
           };
         });
 
@@ -538,25 +861,77 @@
     }
 
     function openTab(tabId) {
-      var tabContents = document.getElementsByClassName('tab-content');
+      const tabContents = document.getElementsByClassName('tab-content');
       for (let i = 0; i < tabContents.length; i++) {
         tabContents[i].style.display = 'none';
       }
       document.getElementById(tabId).style.display = 'block';
 
-      var buttons = document.getElementsByClassName('tab-button');
+      const buttons = document.getElementsByClassName('tab-button');
       for (let i = 0; i < buttons.length; i++) {
         buttons[i].classList.remove('active');
       }
       event.currentTarget.classList.add('active');
     }
 
+    const predObserver = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        const predictions = loadPredictions().filter(p => p.mode === currentMode);
+        if (predDisplayCount < predictions.length) {
+          const added = renderPredictionRows(predictions, predDisplayCount, BATCH_SIZE);
+          predDisplayCount += added;
+          document.getElementById("predHistoryLoader").style.display = predDisplayCount >= predictions.length ? 'none' : 'block';
+        } else {
+          document.getElementById("predHistoryLoader").style.display = 'none';
+        }
+      }
+    }, { threshold: 0.1 });
+
+    const gameObserver = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        const history = JSON.parse(localStorage.getItem('game_history') || '[]');
+        if (gameDisplayCount < history.length) {
+          const added = renderGameHistoryRows(history, gameDisplayCount, BATCH_SIZE);
+          gameDisplayCount += added;
+          document.getElementById("gameHistoryLoader").style.display = gameDisplayCount >= history.length ? 'none' : 'block';
+        } else {
+          document.getElementById("gameHistoryLoader").style.display = 'none';
+        }
+      }
+    }, { threshold: 0.1 });
+
+    async function fetchAndStoreHistory() {
+      try {
+        const res = await fetch(HISTORY_API + '?ts=' + Date.now());
+        const data = await res.json();
+        const history = data.data.list.map(item => {
+          const num = parseInt(item.number);
+          const color = getColor(num);
+          return {
+            period: item.issueNumber,
+            number: num,
+            size: getBigSmall(num),
+            color
+          };
+        });
+        localStorage.setItem('game_history', JSON.stringify(history));
+      } catch (error) {
+        console.error('Error fetching game history:', error);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updateModeButtons();
+      predObserver.observe(document.getElementById('predHistoryLoader'));
+      gameObserver.observe(document.getElementById('gameHistoryLoader'));
+      fetchAndStoreHistory();
+    });
+
     setInterval(updateLiveTime, 1000);
-    setInterval(fetchData, 5000);
+    setInterval(fetchData, 4000);
     fetchData();
     updateLiveTime();
     document.getElementById('predHistory').style.display = 'block';
   </script>
-
 </body>
 </html>
