@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>QuantumPulse Predictor</title>
+  <title>𝐓𝐇𝐄 𝐋𝐒𝐑 𝐏𝐑𝐄𝐃𝐈𝐂𝐓𝐎𝐑 𝐕.4</title>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
     body {
@@ -84,8 +84,8 @@
       padding: 12px;
       box-shadow: 0 3px 12px rgba(0, 255, 204, 0.15);
       margin-bottom: 16px;
-      max-height: 400px; /* Limit height for scrolling */
-      overflow-y: auto; /* Enable vertical scrolling */
+      max-height: 400px;
+      overflow-y: auto;
     }
 
     table {
@@ -201,7 +201,7 @@
 </head>
 <body>
   <div class="container">
-    <div class="header"> 𝐓𝐇𝐄 𝐋𝐒𝐑 𝐏𝐑𝐄𝐃𝐈𝐂𝐓𝐎𝐑 𝐕.1</div>
+    <div class="header">𝐓𝐇𝐄 𝐋𝐒𝐑 𝐏𝐑𝐄𝐃𝐈𝐂𝐓𝐎𝐑 𝐕.4</div>
 
     <div class="mode-buttons">
       <button id="bigsmallMode" class="mode-button" onclick="setMode('bigsmall')">Big/Small</button>
@@ -273,10 +273,11 @@
     const MODEL_KEY = 'quantum_pulse_model';
     const MODE_KEY = 'current_mode';
     const PERFORMANCE_KEY = 'mode_performance';
-    const MAX_PREDICTIONS = 2880; // Store up to 2880 predictions (~1 day at 1-minute intervals)
-    const BATCH_SIZE = 20; // Number of rows to load per batch
-    const AUTO_SWITCH_THRESHOLD = 20; // Minimum predictions before auto-switching
-    const ACCURACY_GAP = 10; // Percentage difference to trigger switch
+    const HISTORY_KEY = 'game_history';
+    const MAX_PREDICTIONS = 2880;
+    const BATCH_SIZE = 20;
+    const AUTO_SWITCH_THRESHOLD = 20;
+    const ACCURACY_GAP = 10;
 
     let currentMode = localStorage.getItem(MODE_KEY) || 'bigsmall';
 
@@ -395,7 +396,6 @@
       if (mode === currentMode) return;
       currentMode = mode;
       localStorage.setItem(MODE_KEY, mode);
-      // Do not clear history to allow performance tracking
       document.getElementById("predHistoryTable").innerHTML = '<tr><td colspan="4">Loading...</td></tr>';
       document.getElementById("predictionBox").innerText = "Analyzing...";
       document.getElementById("confidenceLevel").innerText = "Confidence: Calculating...";
@@ -451,7 +451,7 @@
     function predictNextNumber(numbers) {
       const n = Math.min(5, numbers.length);
       if (n < 2) return Math.floor(Math.random() * 10);
-      const y = numbers.slice(0, n).reverse(); // Oldest to newest
+      const y = numbers.slice(0, n).reverse();
       const x = Array.from({length: n}, (_, i) => i + 1);
       const meanX = (n + 1) / 2;
       const meanY = y.reduce((a, b) => a + b, 0) / n;
@@ -484,6 +484,14 @@
 
     function savePredictions(predictions) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(predictions.slice(0, MAX_PREDICTIONS)));
+    }
+
+    function loadGameHistory() {
+      return JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
+    }
+
+    function saveGameHistory(history) {
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(history.slice(0, MAX_PREDICTIONS)));
     }
 
     function analyzePatterns(history) {
@@ -561,33 +569,16 @@
           momentumScore * predictionModel.bigsmall.weights.momentum +
           varianceScore * predictionModel.bigsmall.weights.variance;
 
-        prediction = "BIG";
-        confidence = 0.5;
-
-        if (streak >= 4) {
-          prediction = lastSize === "BIG" ? "SMALL" : "BIG";
-          confidence = 0.9 + (streak * 0.03) + (entropyScore * 0.15);
-        } else if (pattern === "Zig-Zag") {
-          prediction = lastSize === "BIG" ? "SMALL" : "BIG";
-          accuracy = 0.85 + (zigZagCount * 0.05);
-        } else if (entropy > 2.5) {
-          prediction = weightedScore > 0.5 ? "SMALL" : "BIG";
-          confidence = 0.75 + (entropyScore * 0.15);
-        } else if (momentumScore > 0.5) {
-          prediction = weightedScore > 0.5 ? "SMALL" : "BIG";
-          confidence = 0.8 + (momentumScore * 0.1);
-        } else {
-          prediction = weightedScore > 0.5 ? "SMALL" : "BIG";
-          confidence = Math.max(
-            (streak >= 3 ? 0.85 + (streak * 0.05) : 0.5),
-            transitionScore,
-            zigZagScore,
-            trendScoreBS,
-            entropyScore,
-            momentumScore,
-            varianceScore
-          );
-        }
+        prediction = weightedScore > 0.5 ? "SMALL" : "BIG";
+        confidence = Math.max(
+          (streak >= 3 ? 0.85 + (streak * 0.05) : 0.5),
+          transitionScore,
+          zigZagScore,
+          trendScoreBS,
+          entropyScore,
+          momentumScore,
+          varianceScore
+        );
 
         confidence += (zigZagScore * 0.15) + (colorConsistency * 0.05) + (entropyScore * 0.1) + (momentumScore * 0.05) + (varianceScore * 0.05);
         confidence = Math.min(0.95, Math.max(0.65, confidence));
@@ -752,12 +743,39 @@
       return slice.length;
     }
 
+    function crossCheckPrediction(prediction, history) {
+      const latestHistory = history[0];
+      if (!latestHistory) return true; // No history to check against
+      const lastPeriod = latestHistory.period;
+      const predictions = loadPredictions();
+      const prevPrediction = predictions.find(p => p.period === lastPeriod && p.mode === currentMode);
+      if (prevPrediction && prevPrediction.actual) {
+        const isCorrect = currentMode === 'bigsmall'
+          ? prevPrediction.predicted === prevPrediction.actual
+          : prevPrediction.actual.includes(prevPrediction.predicted);
+        if (!isCorrect) {
+          prediction.confidence = Math.max(0.5, prediction.confidence - 10); // Reduce confidence if last prediction was wrong
+        }
+      }
+      return true;
+    }
+
     function updatePredictionHistory(currentPeriod, history, prediction, confidence) {
       let predictions = loadPredictions();
       let performance = loadPerformance();
+      let gameHistory = loadGameHistory();
 
-      const existing = predictions.find(p => p.period === currentPeriod);
-      if (!existing && currentPeriod) {
+      // Update game history
+      history.forEach(item => {
+        if (!gameHistory.some(h => h.period === item.period)) {
+          gameHistory.unshift(item);
+        }
+      });
+      saveGameHistory(gameHistory);
+
+      // Add new prediction if it doesn't exist
+      const existing = predictions.find(p => p.period === currentPeriod && p.mode === currentMode);
+      if (!existing && currentPeriod && crossCheckPrediction(prediction, history)) {
         predictions.unshift({
           period: currentPeriod,
           predicted: prediction.prediction,
@@ -769,8 +787,9 @@
         });
       }
 
+      // Update predictions with actual results
       history.forEach(item => {
-        const pred = predictions.find(p => p.period === item.period);
+        const pred = predictions.find(p => p.period === item.period && p.mode === currentMode);
         if (pred && !pred.actual) {
           let isWin;
           if (pred.mode === 'bigsmall') {
@@ -793,7 +812,6 @@
           }
           predictionModel.adjustWeights(pred.mode, isWin, patternType);
 
-          // Update performance metrics
           performance[pred.mode].total++;
           if (isWin) performance[pred.mode].wins++;
           performance[pred.mode].accuracy = Math.round((performance[pred.mode].wins / performance[pred.mode].total) * 100);
@@ -803,23 +821,24 @@
       savePredictions(predictions);
       savePerformance(performance);
 
+      // Update display
       const verified = predictions.filter(p => p.actual && p.mode === currentMode);
       const wins = verified.filter(p => p.result === 'Win').length;
       const accuracy = verified.length ? Math.round((wins / verified.length) * 100) : 0;
 
       document.getElementById("accuracyStats").innerText = `Prediction Accuracy: ${accuracy}% (${wins}/${verified.length})`;
 
-      const tbody = document.getElementById("predHistoryTable");
-      tbody.innerHTML = '';
+      const predTbody = document.getElementById("predHistoryTable");
+      predTbody.innerHTML = predictions.length ? '' : '<tr><td colspan="4">No predictions available</td></tr>';
       predDisplayCount = BATCH_SIZE;
       renderPredictionRows(predictions.filter(p => p.mode === currentMode), 0, predDisplayCount);
       document.getElementById("predHistoryLoader").style.display = predDisplayCount >= predictions.filter(p => p.mode === currentMode).length ? 'none' : 'block';
 
       const historyTbody = document.getElementById("historyTable");
-      historyTbody.innerHTML = '';
+      historyTbody.innerHTML = gameHistory.length ? '' : '<tr><td colspan="4">No history available</td></tr>';
       gameDisplayCount = BATCH_SIZE;
-      renderGameHistoryRows(history, 0, gameDisplayCount);
-      document.getElementById("gameHistoryLoader").style.display = gameDisplayCount >= history.length ? 'none' : 'block';
+      renderGameHistoryRows(gameHistory, 0, gameDisplayCount);
+      document.getElementById("gameHistoryLoader").style.display = gameDisplayCount >= gameHistory.length ? 'none' : 'block';
 
       autoSwitchMode();
     }
